@@ -1,0 +1,3 @@
+require("./prothomAlo.com/latestNewsPage")
+
+

@@ -1,0 +1,28 @@
+const CollectedNewsCollection = require("../../DB/Modals/collectedNews")
+
+const saveToCollectedNews = async (articleInfo) => {
+    const { title, htmlDescription, images, category, subcategory, sourceUrl } = articleInfo
+    try {
+        if (
+            !title ||
+            !htmlDescription ||
+            !images || 
+            !images.length
+        ) {
+            return
+        }
+        const isExist = await CollectedNewsCollection.findOne({ $or: [{ title }, { sourceUrl }] }).select("_id")
+        if (isExist) {
+            return
+        }
+       const result = await CollectedNewsCollection.create(articleInfo);
+       console.log("result ==>", result.title)
+
+    } catch (error) {
+        console.log("error==>>", error)
+    }
+
+}
+
+
+module.exports = saveToCollectedNews
