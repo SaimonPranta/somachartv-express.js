@@ -1,3 +1,3 @@
-require("./prothomAlo.com/latestNewsPage")
+// require("./prothomAlo.com/latestNewsPage")
 
 

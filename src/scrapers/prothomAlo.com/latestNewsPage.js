@@ -5,7 +5,7 @@ const remoteContentText = ["আরও পড়ুন", "বিজ্ঞাপন"]
 const scrapeProthomAlo = async () => {
   const { page, browser } = await gotoPage('https://www.prothomalo.com/collection/latest');
   const pageEvaluate = await page.evaluate(() => {
-    let articles = [];
+    let articles = [{ pageUrl: "https://www.prothomalo.com/entertainment/tollywood/hscg3knw9a" }];
     const contentContainer = document.querySelectorAll('.xkXol');
 
     contentContainer.forEach(article => {
@@ -23,15 +23,29 @@ const scrapeProthomAlo = async () => {
     const { page, browser } = await gotoPage(pageInfo.pageUrl);
     const newsDetailsPageEvaluate = await page.evaluate(async (pageUrl) => {
       let articles = {};
-      
+
       const titleElements = await document.querySelector('.IiRps')
       if (!titleElements) {
-        return 
+        return
       }
-      const title =  await titleElements?.innerText
+      const title = await titleElements?.innerText
+      
       const newsContainer = await document.querySelector('.story-content');
       if (!newsContainer) {
         return {};
+      }
+      const readMoreElements = newsContainer.querySelectorAll('.also-read');
+      const adsElements = newsContainer.querySelectorAll('.adsBox');
+
+      if (readMoreElements && readMoreElements.length) {
+        readMoreElements.forEach(element => {
+          element.remove();
+        });
+      }
+      if (adsElements && adsElements.length) {
+        adsElements.forEach(element => {
+          element.remove();
+        });
       }
       const imageElements = await newsContainer.querySelectorAll('img')
       if (!imageElements || !imageElements.length) {
@@ -43,7 +57,7 @@ const scrapeProthomAlo = async () => {
           alt: img?.alt || ""
         }
       });
-      
+
       const contentBody = await newsContainer.querySelector('.VzzDZ');
       if (!contentBody) {
         return {};

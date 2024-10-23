@@ -4,98 +4,104 @@ const path = require("path");
 const CategoriesCollection = require("../../../DB/Modals/categories");
 
 const downloadImage = async (url, filePath) => {
-  try {
-    const response = await axios({
-      method: 'get',
-      url: url,
-      responseType: 'arraybuffer', // Ensure we get the raw binary data
-    });
+    try {
+        const response = await axios({
+            method: 'get',
+            url: url,
+            responseType: 'arraybuffer', // Ensure we get the raw binary data
+        });
 
-    // Write the binary data to a file
-    fs.writeFileSync(filePath, response.data);
+        // Write the binary data to a file
+        fs.writeFileSync(filePath, response.data);
 
-    console.log('Download completed:', path.basename(filePath));
+        console.log('Download completed:', path.basename(filePath));
 
 
 
-  } catch (error) {
-    console.error('Error downloading the image:', error);
-  }
+    } catch (error) {
+        console.error('Error downloading the image:', error);
+    }
 }
 
 const saveCategory = async (category, categoryLabel, subcategory, subcategoryLabel) => {
-  let isExistCategoryAndSubcategory = null
-  let isExistCategory = null
+    let isExistCategoryAndSubcategory = null
+    let isExistCategory = null
+    console.log("=>", { category, categoryLabel, subcategory, subcategoryLabel })
+    let updateCategoryLabel = null
+    let updateSubcategoryLabel = null
+    // let updateCategory = null
+    // let updateSubcategory = null
 
-  let updateCategoryLabel = null
-  let updateSubcategoryLabel = null
-  // let updateCategory = null
-  // let updateSubcategory = null
 
+    if (categoryLabel) {
+        if (subcategoryLabel) {
+            isExistCategoryAndSubcategory = await CategoriesCollection.findOne({
+                $and: [
+                    {
+                        $or: [
+                            {
+                                label: categoryLabel
+                            }
+                        ]
+                    },
+                    {
+                        $or: [
+                            {
+                                "subCategories.label": subcategoryLabel
+                            }
+                        ]
+                    },
+                ]
 
-  if (categoryLabel) {
-      if (subcategoryLabel) {
-          isExistCategoryAndSubcategory = await CategoriesCollection.findOne({
-              $and: [
-                  {
-                      $or: [
-                          {
-                              route: categoryLabel
-                          }
-                      ]
-                  },
-                  {
-                      $or: [
-                          {
-                              "subCategories.route": subcategoryLabel
-                          }
-                      ]
-                  },
-              ]
+            })
 
-          })
-      } else {
-          isExistCategory = await CategoriesCollection.findOne({
-              $or: [
-                  {
-                      route: categoryLabel
-                  }
-              ]
-          })
-      }
-  }
-  if (isExistCategoryAndSubcategory) {
-      updateCategoryLabel = categoryLabel
-      updateSubcategoryLabel = subcategoryLabel
-  } else if (isExistCategory) {
-      if (subcategoryLabel) {
-          const subCategoryInfo = {
-              label: subcategoryLabel,
-              route: subcategory
-          }
-          await CategoriesCollection.findOneAndUpdate({ _id: isExistCategory._id }, {
-              $push: { subCategories: { $each: [subCategoryInfo] } }
-          }, { new: true })
-      } else {
-          updateCategoryLabel = categoryLabel
-      }
-  } else if (category && categoryLabel) {
-      const subCategoryInfo = {
-          label: categoryLabel,
-          route: category,
-      }
-      if (subcategory && subcategoryLabel) {
-          subCategoryInfo["subCategories"] = [
-              {
-                  label: subcategoryLabel,
-                  route: subcategory
-              }
-          ]
-      }
-      console.log("subCategoryInfo ==>>", subCategoryInfo)
+            console.log("isExistCategoryAndSubcategory", isExistCategoryAndSubcategory)
 
-      await CategoriesCollection.create(subCategoryInfo)
-  }
+        } else {
+            isExistCategory = await CategoriesCollection.findOne({
+                $or: [
+                    {
+                        label: categoryLabel
+                    }
+                ]
+            })
+
+            console.log("isExistCategory", isExistCategory)
+
+        }
+    }
+    if (isExistCategoryAndSubcategory) {
+        updateCategoryLabel = categoryLabel
+        updateSubcategoryLabel = subcategoryLabel
+    } else if (isExistCategory) {
+        if (subcategoryLabel) {
+            const subCategoryInfo = {
+                label: subcategoryLabel,
+                route: subcategory
+            }
+            await CategoriesCollection.findOneAndUpdate({ _id: isExistCategory._id }, {
+                $push: { subCategories: { $each: [subCategoryInfo] } }
+            }, { new: true })
+        } else {
+            updateCategoryLabel = categoryLabel
+        }
+    } else if (category && categoryLabel) {
+        const subCategoryInfo = {
+            label: categoryLabel,
+            route: category,
+        }
+        if (subcategory && subcategoryLabel) {
+            subCategoryInfo["subCategories"] = [
+                {
+                    label: subcategoryLabel,
+                    route: subcategory
+                }
+            ]
+        }
+        console.log("subCategoryInfo ==>>", subCategoryInfo)
+
+        await CategoriesCollection.create(subCategoryInfo)
+    }
 }
 
 
@@ -107,5 +113,5 @@ const sanitizeFileName = (fileName = "") => {
 
 
 
- 
-module.exports = { downloadImage, saveCategory, sanitizeFileName}
+
+module.exports = { downloadImage, saveCategory, sanitizeFileName }

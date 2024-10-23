@@ -8,6 +8,7 @@ const { downloadImage, saveCategory, sanitizeFileName } = require("./helper/util
 const getRandomWord = require("../../shared/utilize/getRandomWord")
 const fs = require("fs")
 const path = require("path")
+const { default: axios } = require("axios")
 
 
 router.get("/get-collected-news", async (req, res) => {
@@ -28,10 +29,11 @@ router.post("/send-news", async (req, res) => {
         const { _id, title, sourceUrl, category, categoryLabel, subcategory, subcategoryLabel, modifyTitle, modifyHtmlDescription, modifyDescription, images } = body
 
         if (!_id || !title || !modifyTitle || !modifyHtmlDescription || !modifyDescription) {
-            console.log({
-                _id, title, modifyTitle, modifyHtmlDescription, modifyDescription
+            return res.json({
+                message: "Something is wrong, please try again letter"
             })
-            console.log("hello from here")
+        }
+        if (  !title.length || !modifyTitle.length || !modifyHtmlDescription.length || !modifyDescription.length) {
             return res.json({
                 message: "Something is wrong, please try again letter"
             })
@@ -46,8 +48,8 @@ router.post("/send-news", async (req, res) => {
                     "source.sourceUrl": sourceUrl
                 }
             ]
-        }).select("_id") 
- 
+        }).select("_id")
+        
         if (isExist) {
             await CollectedNewsCollection.findOneAndDelete({ _id })
             return res.json({
@@ -55,29 +57,38 @@ router.post("/send-news", async (req, res) => {
             })
         }
 
-        const checkImagePathExist = async (imgPath) => {
-            const extension = ".jpg"
+        const checkImagePathExist = async (imgPath, imageUrl) => {
+            const sourceImgInfo = await axios.head(imageUrl);
+            const imgType = sourceImgInfo.headers['content-type']
+            const imgTypeSplit = imgType.split("/")
+            const extension = imgTypeSplit[1] || null
+            if (!extension) {
+                return
+            }
             const sanitizeImgPath = sanitizeFileName(imgPath)
-            let updatePath = `${sanitizeImgPath}${extension}`
+            let updatePath = `${sanitizeImgPath}.${extension}`
             let fullPath = await path.join(newsStoragePath, updatePath)
             if (fs.existsSync(fullPath)) {
-                return `${sanitizeImgPath} ${getRandomWord()}${extension}`
+                return `${sanitizeImgPath} ${getRandomWord()}.${extension}`
             }
             // sanitizeFileName
             return updatePath
         }
-        const updateImageList = await Promise.all(images.map(async (imgInfo, index) => {
+        let updateImageList = await Promise.all(images.map(async (imgInfo, index) => {
             const { src } = imgInfo
             let srcInput = index === 0 ? modifyTitle : `${modifyTitle} ${index}`
-            const updatePath = await checkImagePathExist(srcInput)
-
+            const updatePath = await checkImagePathExist(srcInput, src)
+            if (!updatePath) {
+                return null
+            }
             return {
                 ...imgInfo,
                 src: updatePath,
                 sourceSrc: src
             }
         }))
-      await  saveCategory(category, categoryLabel, subcategory, subcategoryLabel)
+        updateImageList = await updateImageList.filter((imgInfo) => imgInfo)
+        await saveCategory(category, categoryLabel, subcategory, subcategoryLabel)
         const updateInfo = {
             title: modifyTitle,
             description: modifyDescription,
