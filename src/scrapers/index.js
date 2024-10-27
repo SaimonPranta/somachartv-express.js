@@ -1,7 +1,8 @@
 const scrapeProthomAlo = require("./prothomAlo.com/latestNewsPage");
+let scrapeCount = 1;
 
 const waitHere = () => {
-  let intervalTime = 10 * 60 * 1000; // 5 minutes
+  let intervalTime = 15 * 60 * 1000; // 15 minutes
 
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -12,9 +13,11 @@ const waitHere = () => {
 
 const startScrape = async () => {
   try {
+    console.log(`Start Scrape:- ${scrapeCount}`);
     await scrapeProthomAlo();
 
-    console.log("hello after scrap");
+    console.log(`End Scrape:- ${scrapeCount}`);
+    scrapeCount += 1;
     await waitHere();
     await startScrape();
   } catch (error) {
