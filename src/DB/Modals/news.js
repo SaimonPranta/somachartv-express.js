@@ -31,6 +31,12 @@ const newsSchema = new mongoose.Schema({
   subcategory: {
     type: String,
   },
+  contentType: {
+    type: String,
+    required: true,
+    enum: ["News", "Blog", "Story"],
+    default: "News"
+  },
   language: {
     type: String,
     required: true,
