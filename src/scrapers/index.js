@@ -25,4 +25,4 @@ const startScrape = async () => {
   }
 };
 
-startScrape();
+// startScrape();

@@ -7,7 +7,7 @@ require("./scrapers/index")
 const path = require("path");
 const { storageRootPath } = require("./shared/constants/variables");
 const app = express()
-const PORT = 5001 || precess.env.PORT
+const PORT = 8001 || precess.env.PORT
 
 
 // App Configuration
