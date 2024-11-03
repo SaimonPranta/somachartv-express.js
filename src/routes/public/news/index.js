@@ -1,115 +1,208 @@
 const CategoriesCollection = require("../../../DB/Modals/categories");
-const NewsCollection = require("../../../DB/Modals/news")
+const NewsCollection = require("../../../DB/Modals/news");
+const getDocument = require("../../../shared/utilize/getDocument");
+const { JSDOM } = require("jsdom");
+const {createImgFrame} = require("./helper/utilitize")
 
-const router = require("express").Router()
+const router = require("express").Router();
 
 router.get("/", async (req, res) => {
-    try {
-        const { category, subcategory, search, sort } = req.query;
+  try {
+    const { category, subcategory, search, sort } = req.query;
 
-        console.log("sort =>", sort)
-        const limit = Number(req.query.limit) || 20;
-        const query = {}
-        if (category && category !== "undefined") {
-            query["category"] = category
-        }
-        if (subcategory && subcategory !== "undefined") {
-            query["subcategory"] = subcategory
-        }
-        if (search && search !== "undefined") {
-            query["$or"] = [{ title: new RegExp(search, "i") }, { description: new RegExp(search, "i") }]
-        }
-        const news = await NewsCollection.find({ ...query }).limit(limit).sort({ createdAt: -1 })
-
-        res.json({
-            success: true,
-            data: news
-        })
-    } catch (error) {
-        res.json({
-            message: "Internal server error"
-        })
+    console.log("sort =>", sort);
+    const limit = Number(req.query.limit) || 20;
+    const query = {};
+    if (category && category !== "undefined") {
+      query["category"] = category;
     }
-})
+    if (subcategory && subcategory !== "undefined") {
+      query["subcategory"] = subcategory;
+    }
+    if (search && search !== "undefined") {
+      query["$or"] = [
+        { title: new RegExp(search, "i") },
+        { description: new RegExp(search, "i") },
+      ];
+    }
+    const news = await NewsCollection.find({ ...query })
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: news,
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error",
+    });
+  }
+});
 
 router.get("/sort", async (req, res) => {
-    try {
-        const { sort } = req.query;
+  try {
+    const { sort } = req.query;
 
-        const limit = 24
-        const page = req.query.page || 1
-        const totalNews = await NewsCollection.countDocuments()
-        let newsSlice = totalNews / limit
-     
+    const limit = 24;
+    const page = req.query.page || 1;
+    const totalNews = await NewsCollection.countDocuments();
+    let newsSlice = totalNews / limit;
 
-        const skip = Number(page - 1) * limit
-        
-        if (skip >= totalNews) {
-            return res.json({
-                message: "All news are already loaded",
-            })
-        }
+    const skip = Number(page - 1) * limit;
 
-        console.log({
-            page,
-            skip,
-            limit
-        })
-
-        let newList = []
-        if (sort === 'সর্বশেষ') {
-            newList = await NewsCollection.find({}).skip(skip).limit(limit).sort({ createdAt: -1 }).select("title images")
-        } else if(sort === "জনপ্রিয়") {
-            newList = await NewsCollection.find({}).skip(skip).limit(limit).sort({ viewCount: -1 }).select("title images viewCount")
-        }
-        console.log("newList =>", newList)
-
-        res.json({
-            data: newList,
-            page: page,
-            total: totalNews,
-        })
-    } catch (error) {
-        console.log("error==>>", error)
-        res.json({
-            message: "Internal server error"
-        })
+    if (skip >= totalNews) {
+      return res.json({
+        message: "All news are already loaded",
+      });
     }
-})
+
+    console.log({
+      page,
+      skip,
+      limit,
+    });
+
+    let newList = [];
+    if (sort === "সর্বশেষ") {
+      newList = await NewsCollection.find({})
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+        .select("title images");
+    } else if (sort === "জনপ্রিয়") {
+      newList = await NewsCollection.find({})
+        .skip(skip)
+        .limit(limit)
+        .sort({ viewCount: -1 })
+        .select("title images viewCount");
+    }
+    console.log("newList =>", newList);
+
+    res.json({
+      data: newList,
+      page: page,
+      total: totalNews,
+    });
+  } catch (error) {
+    console.log("error==>>", error);
+    res.json({
+      message: "Internal server error",
+    });
+  }
+});
 
 router.get("/:id", async (req, res) => {
-    try {
-        const { id } = req.params
-        console.log("id ==>>", id)
+  try {
+    const { id } = req.params;
 
-        const news = await NewsCollection.findOneAndUpdate(
-            { _id: id },
-            { $inc: { viewCount: 1 } },
-            { new: true }
-        );
+    const news = await NewsCollection.findOneAndUpdate(
+      { _id: id },
+      { $inc: { viewCount: 1 } },
+      { new: true }
+    );
 
-        console.log("news=>", news)
-        if (news.category) {
-            const categories = await CategoriesCollection.findOne({ label: news.category })
-            news._doc["categoriesRoute"] = categories.route
-            if (news.subcategory) {
-                const subcategoryInfo = await categories?.subCategories?.find(routeInfo => routeInfo.label === news.subcategory);
-                if (subcategoryInfo) {
-                    news._doc["subCategoriesRoute"] = subcategoryInfo.route
-                }
-            }
+    // if (news.category) {
+    //   const categories = await CategoriesCollection.findOne({
+    //     label: news.category,
+    //   });
+    //   news._doc["categoriesRoute"] = categories.route;
+    //   if (news.subcategory) {
+    //     const subcategoryInfo = await categories?.subCategories?.find(
+    //       (routeInfo) => routeInfo.label === news.subcategory
+    //     );
+    //     if (subcategoryInfo) {
+    //       news._doc["subCategoriesRoute"] = subcategoryInfo.route;
+    //     }
+    //   }
+    // }
+    if (news.htmlDescription) {
+      let updateHtmlDescription = "";
+
+      const document = await getDocument(news.htmlDescription);
+      const paragraphs = document.querySelectorAll("p");
+      const images = news.images;
+      const result = [];
+      let imgIndex = 0;
+
+      const imgPosition = Math.floor(paragraphs.length / images.length);
+      await paragraphs.forEach((el, index) => {
+        const mainIndex = index + 1;
+        // result.push(el.outerHTML);
+        updateHtmlDescription += el.outerHTML;
+        if (
+          imgIndex < images.length &&
+          (Number(mainIndex + 1) === paragraphs.length ||
+            mainIndex % imgPosition === 0)
+        ) {
+          const imgEle = document.createElement("img");
+          const imgInfo = images[imgIndex];
+          console.log("imgInfo ==>>", imgInfo);
+
+          if (imgInfo.src) {
+            imgEle.src = imgInfo.src;
+          }
+          imgEle.alt = imgInfo.alt || news;
+
+          // updateHtmlDescription += imgEle.outerHTML;
+          updateHtmlDescription += createImgFrame(imgInfo, news);
+          imgIndex++;
         }
-
-        res.json({
-            success: true,
-            data: news
-        })
-    } catch (error) {
-        console.log("error =>", error)
-        res.json({
-            message: "Internal server error"
-        })
+        // if (
+        //   Number(mainIndex + 1) === paragraphs.length &&
+        //   imgIndex < images.length
+        // ) {
+        //   const imgEle = document.createElement("img");
+        //   console.log("imgEle ==>", imgEle.outerHTML);
+        //   const imgInfo = images[imgIndex];
+        //   if (imgInfo.src) {
+        //     imgEle.src = imgInfo.src;
+        //   }
+        //   updateHtmlDescription += imgEle.outerHTML;
+        //   imgIndex++;
+        // } else if (mainIndex % imgPosition === 0 && imgIndex < images.length) {
+        //   const imgEle = document.createElement("img");
+        //   const imgInfo = images[imgIndex];
+        //   if (imgInfo.src) {
+        //     imgEle.src = imgInfo.src;
+        //   }
+        //   updateHtmlDescription += imgEle.outerHTML;
+        //   imgIndex++;
+        // }
+      });
+      console.log("updateHtmlDescription ==>>", updateHtmlDescription);
     }
-})
 
-module.exports = router
+    res.json({
+      success: true,
+      data: news,
+    });
+  } catch (error) {
+    console.log("error =>", error);
+    res.json({
+      message: "Internal server error",
+    });
+  }
+});
+
+module.exports = router;
+let imgArray = [1, 2, 3];
+const result = [];
+let imgIndex = 0;
+
+let des = new Array(0).fill("p");
+const imgPosition = Math.floor(des.length / imgArray.length);
+des.forEach((el, index) => {
+  const mainIndex = index + 1;
+  result.push(el);
+  // Insert an image every two "p" elements
+  if (Number(mainIndex + 1) === des.length && imgIndex < imgArray.length) {
+    result.push(imgArray[imgIndex]);
+    imgIndex++;
+  } else if (mainIndex % imgPosition === 0 && imgIndex < imgArray.length) {
+    result.push(imgArray[imgIndex]);
+    imgIndex++;
+  }
+});
+
+console.log("result ==>>", result);
