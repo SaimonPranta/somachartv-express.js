@@ -8,20 +8,17 @@ const createImgFrame = (imgInfo, newsInfo) => {
   const figcaptionEle = document.createElement("figcaption");
 
   if (imgInfo.src) {
-    imgEle.src = imgInfo.src;
+    imgEle.src = `http://localhost:8001/${imgInfo.src}`;
+    // imgEle.src = imgInfo.src;
   }
-  imgEle.alt = imgInfo.alt || newsInfo.title; 
-  figcaptionEle.textContent  = imgInfo.figcaption || newsInfo.title;
+  imgEle.width = 800;
+  imgEle.height = 600;
+  imgEle.alt = imgInfo.alt || newsInfo.title;
+  figcaptionEle.textContent = imgInfo.figcaption || newsInfo.title;
   figureEle.className = !imgInfo.figcaption ? "hidden-figcaption" : "";
   figureEle.appendChild(imgEle);
-  figureEle.appendChild(figcaptionEle); 
+  figureEle.appendChild(figcaptionEle);
   return figureEle.outerHTML;
 };
 
 module.exports = { createImgFrame };
-
-
-
-
-
- 

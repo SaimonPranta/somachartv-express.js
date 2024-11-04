@@ -96,7 +96,7 @@ router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const news = await NewsCollection.findOneAndUpdate(
+    let news = await NewsCollection.findOneAndUpdate(
       { _id: id },
       { $inc: { viewCount: 1 } },
       { new: true }
@@ -121,58 +121,38 @@ router.get("/:id", async (req, res) => {
 
       const document = await getDocument(news.htmlDescription);
       const paragraphs = document.querySelectorAll("p");
-      const images = news.images;
+      const paragraphImg = news.images.slice(1, news.images.length)
+      const images = paragraphImg;
       const result = [];
       let imgIndex = 0;
 
       const imgPosition = Math.floor(paragraphs.length / images.length);
       await paragraphs.forEach((el, index) => {
-        const mainIndex = index + 1;
-        // result.push(el.outerHTML);
+        const mainIndex = index + 1; 
         updateHtmlDescription += el.outerHTML;
         if (
           imgIndex < images.length &&
           (Number(mainIndex + 1) === paragraphs.length ||
             mainIndex % imgPosition === 0)
         ) {
-          const imgEle = document.createElement("img");
           const imgInfo = images[imgIndex];
-          console.log("imgInfo ==>>", imgInfo);
+          // const imgEle = document.createElement("img");
+          // console.log("imgInfo ==>>", imgInfo);
 
-          if (imgInfo.src) {
-            imgEle.src = imgInfo.src;
-          }
-          imgEle.alt = imgInfo.alt || news;
-
-          // updateHtmlDescription += imgEle.outerHTML;
+          // if (imgInfo.src) {
+          //   imgEle.src = `http://localhost:8001/${imgInfo.src}`;
+          //   // imgEle.src = imgInfo.src;
+          // }
+          // imgEle.alt = imgInfo.alt || news;
+ 
           updateHtmlDescription += createImgFrame(imgInfo, news);
           imgIndex++;
         }
-        // if (
-        //   Number(mainIndex + 1) === paragraphs.length &&
-        //   imgIndex < images.length
-        // ) {
-        //   const imgEle = document.createElement("img");
-        //   console.log("imgEle ==>", imgEle.outerHTML);
-        //   const imgInfo = images[imgIndex];
-        //   if (imgInfo.src) {
-        //     imgEle.src = imgInfo.src;
-        //   }
-        //   updateHtmlDescription += imgEle.outerHTML;
-        //   imgIndex++;
-        // } else if (mainIndex % imgPosition === 0 && imgIndex < images.length) {
-        //   const imgEle = document.createElement("img");
-        //   const imgInfo = images[imgIndex];
-        //   if (imgInfo.src) {
-        //     imgEle.src = imgInfo.src;
-        //   }
-        //   updateHtmlDescription += imgEle.outerHTML;
-        //   imgIndex++;
-        // }
-      });
-      console.log("updateHtmlDescription ==>>", updateHtmlDescription);
+        
+      }); 
+      news = await {...news._doc , updateHtmlDescription}
     }
-
+console.log("news ==>>", news)
     res.json({
       success: true,
       data: news,
