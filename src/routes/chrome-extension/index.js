@@ -113,14 +113,14 @@ router.post("/send-news", async (req, res) => {
                     const imgDestinationPath = path.join(newsStoragePath, src)
                     await downloadImage(sourceSrc, imgDestinationPath)
                 } catch (error) {
-                    console.log("error ==>", error)
+                    
                 }
             }))
         }
 
         res.json({ data: [] })
     } catch (error) {
-        console.log("error ==>", error)
+        
         res.json({
             message: "Internal server error"
         })

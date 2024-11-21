@@ -24,8 +24,6 @@ async function scrapeChatGPT(inputText) {
 
     // Extract the response text
     const response = await page.$eval('.chat-response-selector', element => element.innerText);
-    console.log('ChatGPT Response:', response);
-
     // Close the browser
     await browser.close();
 

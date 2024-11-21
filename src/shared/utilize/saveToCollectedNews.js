@@ -16,10 +16,8 @@ const saveToCollectedNews = async (articleInfo) => {
             return
         }
        const result = await CollectedNewsCollection.create(articleInfo);
-       console.log("result ==>", result.title)
 
     } catch (error) {
-        console.log("error==>>", error)
     }
 
 }

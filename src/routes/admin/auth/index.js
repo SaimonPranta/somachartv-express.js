@@ -23,14 +23,13 @@ router.get("/check-token", async (req, res) => {
 
     res.json({ message: "Unauthorized attempt" });
   } catch (error) {
-    console.log("error =>", error);
+    
     res.json({ message: "Internal server error" });
   }
 });
 router.post("/", async (req, res) => {
   try {
     const { mail, password } = req.body;
-    console.log("mail, password ", { mail, password });
     const data = await EmployCollection.findOne({
       email: mail,
       password,
@@ -39,7 +38,6 @@ router.post("/", async (req, res) => {
     // const data = await EmployCollection.create({
     //      email: mail, password
     // })
-    console.log("data -==>>", data);
     const token = await jwt.sign(
       {
         mail,
@@ -49,7 +47,7 @@ router.post("/", async (req, res) => {
     );
     res.json({ data, token });
   } catch (error) {
-    console.log("error =>", error);
+    
     res.json({ message: "Internal server error" });
   }
 });

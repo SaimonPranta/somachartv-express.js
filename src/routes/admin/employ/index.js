@@ -70,8 +70,6 @@ router.post("/", async (req, res) => {
     const data = JSON.parse(req.body.data);
     let image = req.files.img
 
-    console.log("hello")
-
     const imageExt = path.extname(image.name)
     const imageName = `${image.name.replace(imageExt, "")}_${Date.now()}${getRandomNumber()}${imageExt}`
     image.name = imageName
@@ -97,7 +95,6 @@ router.post("/", async (req, res) => {
       message: "Categories updated successfully"
     })
   } catch (error) {
-    console.log("error ==>>", error)
     res.json({
       message: "Internal server error"
     })

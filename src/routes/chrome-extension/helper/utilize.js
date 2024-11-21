@@ -14,7 +14,6 @@ const downloadImage = async (url, filePath) => {
         // Write the binary data to a file
         fs.writeFileSync(filePath, response.data);
 
-        console.log('Download completed:', path.basename(filePath));
 
 
 
@@ -26,7 +25,6 @@ const downloadImage = async (url, filePath) => {
 const saveCategory = async (category, categoryLabel, subcategory, subcategoryLabel) => {
     let isExistCategoryAndSubcategory = null
     let isExistCategory = null
-    console.log("=>", { category, categoryLabel, subcategory, subcategoryLabel })
     let updateCategoryLabel = null
     let updateSubcategoryLabel = null
     // let updateCategory = null
@@ -55,7 +53,6 @@ const saveCategory = async (category, categoryLabel, subcategory, subcategoryLab
 
             })
 
-            console.log("isExistCategoryAndSubcategory", isExistCategoryAndSubcategory)
 
         } else {
             isExistCategory = await CategoriesCollection.findOne({
@@ -66,7 +63,6 @@ const saveCategory = async (category, categoryLabel, subcategory, subcategoryLab
                 ]
             })
 
-            console.log("isExistCategory", isExistCategory)
 
         }
     }
@@ -98,7 +94,6 @@ const saveCategory = async (category, categoryLabel, subcategory, subcategoryLab
                 }
             ]
         }
-        console.log("subCategoryInfo ==>>", subCategoryInfo)
 
         await CategoriesCollection.create(subCategoryInfo)
     }

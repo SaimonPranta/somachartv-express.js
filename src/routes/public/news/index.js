@@ -10,7 +10,6 @@ router.get("/", async (req, res) => {
   try {
     const { category, subcategory, search, sort } = req.query;
 
-    console.log("sort =>", sort);
     const limit = Number(req.query.limit) || 20;
     const query = {};
     if (category && category !== "undefined") {
@@ -57,12 +56,6 @@ router.get("/sort", async (req, res) => {
       });
     }
 
-    console.log({
-      page,
-      skip,
-      limit,
-    });
-
     let newList = [];
     if (sort === "সর্বশেষ") {
       newList = await NewsCollection.find({})
@@ -77,15 +70,12 @@ router.get("/sort", async (req, res) => {
         .sort({ viewCount: -1 })
         .select("title images viewCount");
     }
-    console.log("newList =>", newList);
-
     res.json({
       data: newList,
       page: page,
       total: totalNews,
     });
   } catch (error) {
-    console.log("error==>>", error);
     res.json({
       message: "Internal server error",
     });
@@ -137,7 +127,6 @@ router.get("/:id", async (req, res) => {
         ) {
           const imgInfo = images[imgIndex];
           // const imgEle = document.createElement("img");
-          // console.log("imgInfo ==>>", imgInfo);
 
           // if (imgInfo.src) {
           //   imgEle.src = `http://localhost:8001/${imgInfo.src}`;
@@ -152,13 +141,12 @@ router.get("/:id", async (req, res) => {
       }); 
       news = await {...news._doc , updateHtmlDescription}
     }
-console.log("news ==>>", news)
     res.json({
       success: true,
       data: news,
     });
   } catch (error) {
-    console.log("error =>", error);
+    
     res.json({
       message: "Internal server error",
     });
@@ -185,4 +173,3 @@ des.forEach((el, index) => {
   }
 });
 
-console.log("result ==>>", result);

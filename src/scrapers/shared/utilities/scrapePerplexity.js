@@ -5,7 +5,6 @@ const gotoPage = require('./gotoPage');
 const waitHere = (seconds) => {
     return new Promise((resolve) => {
         setTimeout(() => {
-            console.log(`Waited for ${seconds} seconds`);
             resolve("done");
         }, seconds * 1000); // Convert seconds to milliseconds
     });
@@ -27,13 +26,9 @@ async function scrapePerplexity(inputText) {
     await page.type(inputFieldId, inputValue);
 
     await waitHere(3);
-    console.log("Input submitted. Preparing to click submit...");
-
     await page.click(submitButtonId);
 
     await page.waitForSelector('div.prose');
-    console.log("Output section loaded. Waiting for 3 seconds...");
-
     await waitHere(30);
 
     // Extract the last output text
@@ -44,8 +39,6 @@ async function scrapePerplexity(inputText) {
         return firstSpan ? firstSpan.innerText : 'No span found'; // Return the text or a message if no span is found
     });
 
-
-    // console.log('Rewritten Text:', outputText);
 
     // await browser.close(); // Close the browser
     return outputText;

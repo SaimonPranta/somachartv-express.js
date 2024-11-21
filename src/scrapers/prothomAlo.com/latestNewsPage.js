@@ -5,12 +5,11 @@ const NewsCollection = require("../../DB/Modals/news");
 const remoteContentText = ["আরও পড়ুন", "বিজ্ঞাপন"];
 
 const scrapeProthomAlo = async () => {
-  console.log("Start Scrape on Phothomalo");
   const { page, browser } = await gotoPage(
     "https://www.prothomalo.com/collection/latest"
   );
   let pageEvaluate = await page.evaluate(() => {
-    let articles = [ ];
+    let articles = [{pageUrl: "https://www.prothomalo.com/entertainment/tollywood/hscg3knw9a"}];
     const contentContainer = document.querySelectorAll(".xkXol");
 
     contentContainer.forEach((article) => {
@@ -44,8 +43,6 @@ const scrapeProthomAlo = async () => {
       return true;
     })
   );
-
-  console.log("pageEvaluate ==>>", pageEvaluate)
 
   let contentList = await await Promise.all(
     pageEvaluate.map(async (pageInfo) => {
