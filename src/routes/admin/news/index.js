@@ -56,8 +56,12 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const data = JSON.parse(req.body.data);
-    let image = req.files.img
+    let files = req.files
+    const {images,htmlDescription, afs } = data
 
+console.log("image ======>>>", req.files)
+console.log("data ======>>>", data)
+    throw Error("Hello")
     const imageExt = path.extname(image.name)
     const imageName = `${image.name.replace(imageExt, "")}_${Date.now()}${getRandomNumber()}${imageExt}`
     image.name = imageName
@@ -116,8 +120,6 @@ router.put("/", async (req, res) => {
       const newsInfo = await new NewsCollection({ ...data })
       updateNews = await NewsCollection.findOneAndUpdate({ _id: data._id }, { ...data }, { new: true })
     }
-
-
 
 
 

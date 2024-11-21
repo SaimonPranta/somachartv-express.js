@@ -1,7 +1,6 @@
 const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser");
- require("../test");
 const fileUpload = require("express-fileupload");
 require("./DB/connections")
 require("./scrapers/index")
