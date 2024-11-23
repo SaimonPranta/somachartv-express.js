@@ -13,10 +13,10 @@ router.get("/", async (req, res) => {
     const limit = Number(req.query.limit) || 20;
     const query = {};
     if (category && category !== "undefined") {
-      query["category"] = category;
+      query["category.label"] = category;
     }
     if (subcategory && subcategory !== "undefined") {
-      query["subcategory"] = subcategory;
+      query["subcategory.label"] = subcategory;
     }
     if (search && search !== "undefined") {
       query["$or"] = [

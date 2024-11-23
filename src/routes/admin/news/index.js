@@ -87,8 +87,7 @@ router.post("/", async (req, res) => {
         src: fileName,
         file: file,
       };
-    });
-    // console.log("images --->>>", images);
+    }); 
     const document = await getDocument(htmlDescription);
 
     const paragraphList = await document.querySelectorAll("p");
@@ -133,8 +132,7 @@ router.post("/", async (req, res) => {
       data: updateNews,
       message: "Categories updated successfully",
     });
-  } catch (error) {
-    console.log("error ===>>>", error);
+  } catch (error) { 
     res.json({
       message: "Internal server error",
     });
@@ -167,10 +165,7 @@ router.put("/", async (req, res) => {
       return res.json({
         message: "Failed to update, news not found",
       });
-    }
-
-    console.log("files--->>>", files);
-    console.log("images 1--->>>", images);
+    } 
     images = await images.map((fileInfo, index) => {
       const imgKey = fileInfo.imgKey;
       const file = files[imgKey];
@@ -190,8 +185,7 @@ router.put("/", async (req, res) => {
         // src: fileName,
         // file: file,
       };
-    });
-    console.log("images 2--->>>", images);
+    }); 
     const document = await getDocument(htmlDescription);
 
     const paragraphList = await document.querySelectorAll("p");
@@ -257,8 +251,7 @@ router.put("/", async (req, res) => {
       data: updateNews,
       message: "Categories updated successfully",
     });
-  } catch (error) {
-    console.log("error ===>>>", error);
+  } catch (error) { 
     res.json({
       message: "Internal server error",
     });
