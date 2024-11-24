@@ -1,11 +1,24 @@
+const router = require("express").Router();
 const CategoriesCollection = require("../../../DB/Modals/categories");
 const NewsCollection = require("../../../DB/Modals/news");
 const getDocument = require("../../../shared/utilize/getDocument");
 const { JSDOM } = require("jsdom");
 const {createImgFrame} = require("./helper/utilitize")
 
-const router = require("express").Router();
-
+router.get("/sitemap", async (req, res) => {
+  try {
+    const news = await NewsCollection.find().sort({createdAt: -1}).select("_id title category createdAt subcategory images updatedAt")
+    console.log("news ==>>", news)
+    res.json({
+      success: true,
+      data: news,
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error",
+    });
+  }
+});
 router.get("/", async (req, res) => {
   try {
     const { category, subcategory, search, sort } = req.query;
