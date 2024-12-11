@@ -8,7 +8,6 @@ const {createImgFrame} = require("./helper/utilitize")
 router.get("/sitemap", async (req, res) => {
   try {
     const news = await NewsCollection.find().sort({createdAt: -1}).select("_id title category createdAt subcategory images updatedAt")
-    console.log("news ==>>", news)
     res.json({
       success: true,
       data: news,
@@ -40,7 +39,7 @@ router.get("/", async (req, res) => {
     const news = await NewsCollection.find({ ...query })
       .limit(limit)
       .sort({ createdAt: -1 });
-
+console.log("news ===>>", news)
     res.json({
       success: true,
       data: news,

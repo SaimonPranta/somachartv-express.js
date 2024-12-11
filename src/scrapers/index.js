@@ -1,5 +1,5 @@
 const scrapeProthomAlo = require("./prothomAlo.com/latestNewsPage");
-require('./test')
+require('./bd24live.com/index')
 
 const waitHere = () => {
   let intervalTime = 15 * 60 * 1000; // 15 minutes

@@ -9,7 +9,11 @@ const scrapeProthomAlo = async () => {
     "https://www.prothomalo.com/collection/latest"
   );
   let pageEvaluate = await page.evaluate(() => {
-    let articles = [{pageUrl: "https://www.prothomalo.com/entertainment/tollywood/hscg3knw9a"}];
+    let articles = [
+      {
+        pageUrl: "https://www.prothomalo.com/entertainment/tollywood/hscg3knw9a"
+      }
+    ];
     const contentContainer = document.querySelectorAll(".xkXol");
 
     contentContainer.forEach((article) => {
@@ -28,13 +32,13 @@ const scrapeProthomAlo = async () => {
         return false;
       }
       const existInCollectedNews = await CollectedNewsCollection.findOne({
-        sourceUrl: pageInfo.pageUrl,
+        sourceUrl: pageInfo.pageUrl
       }).select("_id");
       if (existInCollectedNews) {
         return false;
       }
       const existIndNews = await NewsCollection.findOne({
-        sourceUrl: pageInfo.pageUrl,
+        sourceUrl: pageInfo.pageUrl
       }).select("_id");
       if (existIndNews) {
         return false;
@@ -80,7 +84,7 @@ const scrapeProthomAlo = async () => {
         const images = await Array.from(imageElements).map((img) => {
           return {
             src: img?.src || "",
-            alt: img?.alt || "",
+            alt: img?.alt || ""
           };
         });
 
@@ -114,7 +118,7 @@ const scrapeProthomAlo = async () => {
             images,
             category,
             subCategory,
-            sourceUrl: pageUrl,
+            sourceUrl: pageUrl
           };
         }
         return articles;
