@@ -1,23 +1,16 @@
 const filterHTML = require("../../shared/utilize/filterHTML");
 const getWebpageDocument = require("../../shared/utilize/getWebPageDocument");
 const saveToCollectedNews = require("../../shared/utilize/saveToCollectedNews");
+const MAIN_DOMAIN = "https://www.bd-pratidin.com";
 
 const getNewsDetails = async (link) => {
   try {
-    const document = await getWebpageDocument(
-      "https://www.bd-pratidin.com/national/2024/12/12/1060495"
-    );
+    const document = await getWebpageDocument(link);
     if (!document) {
       return;
     }
-
-    // const identifierElement = document.querySelector(".content_p");
-    // if (!identifierElement) {
-    //   return;
-    // }
+ 
     const newsContainer = document.querySelector(".detailsArea");
-
-   
 
     const titleElement = document.querySelector(".card-title");
     const title = titleElement.textContent;
@@ -25,42 +18,32 @@ const getNewsDetails = async (link) => {
     const imageElements = newsContainer.querySelectorAll("img.w-100");
     const paragraphContainer = newsContainer.querySelector("article");
     const paragraphElements = paragraphContainer.querySelectorAll("p");
-    // const categoryContainer = document.querySelector("h5");
-    // const categoryList = categoryContainer.querySelectorAll("a");
-    // const categoryElement = categoryList[1];
-    // const subCategoryElement = categoryList[2];
 
-    let category = "";
-    let subCategory = "";
+    let category = {
+      route: "",
+      label: "",
+    };
+    let subCategory = {
+      route: "",
+      label: "",
+    };
 
-    // if (categoryElement) {
-    //   if (categoryElement) {
-    //     const categoryLinkList = categoryElement.href.split("/");
-    //     category = categoryLinkList[categoryLinkList.length - 1];
-    //   }
-    // }
-    // if (subCategoryElement) {
-    //   if (subCategoryElement) {
-    //     const categoryLinkList = subCategoryElement.href.split("/");
-    //     subCategory = subCategoryElement[categoryLinkList.length - 1];
-    //   }
-    // }
+    category.route = link.replace(`${MAIN_DOMAIN}/`, "").split("/")[0]
+ 
+
+   
 
     const images = await Array.from(imageElements).map((img) => {
       return {
         src: img?.src || "",
-        alt: img?.alt || ""
+        alt: img?.alt || "",
       };
-    });
-    console.log("images ==>>", images);
-
+    }); 
     let htmlDescription = "";
     await paragraphElements.forEach((p) => {
       htmlDescription += p.outerHTML;
     });
-    console.log("htmlDescription ==>>", htmlDescription);
     htmlDescription = await filterHTML(htmlDescription);
-    console.log("htmlDescription ==>>", htmlDescription);
 
     if (!title && !htmlDescription && !images.length) {
       return null;
@@ -71,40 +54,48 @@ const getNewsDetails = async (link) => {
       images,
       category: category,
       subCategory: subCategory,
-      sourceUrl: link
+      sourceUrl: link,
     };
-
     return articles;
   } catch (error) {
-    console.log("error =>>", error);
     return null;
   }
 };
 
 const scrapeSomoyNews = async () => {
-  try {
-    const mainDomain = "https://www.bd24live.com/bangla/";
+  try { 
 
-    const document = await getWebpageDocument(mainDomain);
+    const document = await getWebpageDocument(MAIN_DOMAIN);
     if (!document) {
       return;
     }
-    let newsContainer = await document.querySelector("#pills-home");
-    const aElements = await newsContainer.querySelectorAll("a");
+    let leadNewsContainer = await document.querySelector(".newLeadArea");
+    let highlightNewsContainer = await document.querySelector(".highlights");
+     
+    const leadNewsAElements = await leadNewsContainer.querySelectorAll("a");
+    const highlightAElements = await highlightNewsContainer.querySelectorAll("a");
+  
     let newsLinks = [];
-    await aElements.forEach((item) => {
+ 
+    await leadNewsAElements.forEach((item) => {
       const link = item.href;
-      if (link) {
+      if (link && link.includes(MAIN_DOMAIN)) {
         newsLinks.push(link);
       }
     });
+    await highlightAElements.forEach((item) => {
+      const link = item.href;
+      if (link && link.includes(MAIN_DOMAIN)) {
+        newsLinks.push(link);
+      }
+    });
+
     newsLinks = await Promise.all(
-      newsLinks.slice(0, 1).map(async (link) => {
+      newsLinks.map(async (link) => {
         try {
           const geNewsInfo = await getNewsDetails(link);
           return geNewsInfo;
         } catch (error) {
-          console.log("errro form newsLinks looping ==>>", getNewsDetails);
           return null;
         }
       })
@@ -116,10 +107,9 @@ const scrapeSomoyNews = async () => {
       return true;
     });
     await newsLinks.map(async (content, index) => {
-      // await saveToCollectedNews(content);
+      await saveToCollectedNews(content);
     });
   } catch (error) {
-    console.log("error", error);
   }
 };
 
