@@ -23,21 +23,29 @@ const getNewsDetails = async (link) => {
     const categoryElement = categoryList[1];
     const subCategoryElement = categoryList[2];
 
-    let category = "";
-    let subCategory = "";
-
+    let category = {
+      route: "",
+      label: "",
+    };
+    let subCategory = {
+      route: "",
+      label: "",
+    };
     if (categoryElement) {
       if (categoryElement) {
         const categoryLinkList = categoryElement.href.split("/");
-        category = categoryLinkList[categoryLinkList.length - 1];
+        category.label = categoryElement.textContent.trim()
+        category.route = categoryLinkList[categoryLinkList.length - 1].trim();
       }
     }
     if (subCategoryElement) {
       if (subCategoryElement) {
         const categoryLinkList = subCategoryElement.href.split("/");
-        subCategory = subCategoryElement[categoryLinkList.length - 1];
+        subCategory.route = subCategoryElement[categoryLinkList.length - 1].trim();
+        subCategory.label = subCategoryElement.textContent.trim()
       }
     }
+
 
     const images = await Array.from(imageElements).map((img) => {
       return {
@@ -69,7 +77,7 @@ const getNewsDetails = async (link) => {
   }
 };
 
-const scrapeSomoyNews = async () => {
+const scrapeBD24LiveNews = async () => {
   try {
     const mainDomain = "https://www.bd24live.com/bangla/";
 
@@ -92,7 +100,7 @@ const scrapeSomoyNews = async () => {
           const geNewsInfo = await getNewsDetails(link); 
           return geNewsInfo
         } catch (error) {
-          console.log("errro form newsLinks looping ==>>", getNewsDetails);
+          console.log("Error form newsLinks looping ==>>", error);
           return null
         }
       })
@@ -109,7 +117,8 @@ const scrapeSomoyNews = async () => {
   } catch (error) {
     console.log("error", error);
   }
+  
 };
 
-// scrapeSomoyNews();
-module.exports = scrapeSomoyNews;
+// scrapeBD24LiveNews();
+module.exports = scrapeBD24LiveNews;

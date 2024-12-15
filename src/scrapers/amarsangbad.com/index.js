@@ -1,22 +1,21 @@
 const filterHTML = require("../../shared/utilize/filterHTML");
 const getWebpageDocument = require("../../shared/utilize/getWebPageDocument");
 const saveToCollectedNews = require("../../shared/utilize/saveToCollectedNews");
-const MAIN_DOMAIN = "https://www.bd-pratidin.com";
+const MAIN_DOMAIN = "https://www.amarsangbad.com";
 
-const getNewsDetails = async (link) => {
+const getNewsDetails = async (info) => {
   try {
-    const document = await getWebpageDocument(link);
+    // link = "https://www.amarsangbad.com/politics/news/299768";
+    const document = await getWebpageDocument(info.link);
     if (!document) {
       return;
     }
- 
-    const newsContainer = document.querySelector(".detailsArea");
+    const imgContainer = document.querySelector(".content-details");
+    const newsContainer = document.querySelector(".details-content");
 
-    const titleElement = document.querySelector(".card-title");
+    const titleElement = newsContainer.querySelector("h1");
     const title = titleElement.textContent;
-
-    const imageElements = newsContainer.querySelectorAll("img.w-100");
-    const paragraphContainer = newsContainer.querySelector("article");
+    const paragraphContainer = newsContainer.querySelector(".content-details");
     const paragraphElements = paragraphContainer.querySelectorAll("p");
 
     let category = {
@@ -27,22 +26,24 @@ const getNewsDetails = async (link) => {
       route: "",
       label: "",
     };
+    category.route = info.link.replace(`${MAIN_DOMAIN}/`, "").split("/")[0];
+    const categoryContainer = document.querySelector(".details-breadcrumb");
 
-    category.route = link.replace(`${MAIN_DOMAIN}/`, "").split("/")[0]
- 
+    if (categoryContainer) {
+      let categoryEle = categoryContainer.querySelector(".active");
+      if (categoryEle) {
+        categoryEle = categoryEle.querySelector("a");
+        category.label = categoryEle.textContent.trim();
+      }
+    }
 
-   
-
-    const images = await Array.from(imageElements).map((img) => {
-      return {
-        src: img?.src || "",
-        alt: img?.alt || "",
-      };
-    }); 
+    const imgInfo = info.img;
+    const images = [imgInfo];
     let htmlDescription = "";
     await paragraphElements.forEach((p) => {
       htmlDescription += p.outerHTML;
     });
+
     htmlDescription = await filterHTML(htmlDescription);
 
     if (!title && !htmlDescription && !images.length) {
@@ -54,7 +55,7 @@ const getNewsDetails = async (link) => {
       images,
       category: category,
       subCategory: subCategory,
-      sourceUrl: link,
+      sourceUrl: info.link,
     };
     return articles;
   } catch (error) {
@@ -62,31 +63,27 @@ const getNewsDetails = async (link) => {
   }
 };
 
-const scrapeBDPratidinNews = async () => {
-  try { 
-
+const scrapeAmarsangbadNews = async () => {
+  try {
     const document = await getWebpageDocument(MAIN_DOMAIN);
     if (!document) {
       return;
     }
-    let leadNewsContainer = await document.querySelector(".newLeadArea");
-    let highlightNewsContainer = await document.querySelector(".highlights");
-     
+    let leadNewsContainer = await document.querySelector("#pills-tabContent");
+
     const leadNewsAElements = await leadNewsContainer.querySelectorAll("a");
-    const highlightAElements = await highlightNewsContainer.querySelectorAll("a");
-  
     let newsLinks = [];
- 
+
     await leadNewsAElements.forEach((item) => {
+      const imgEle = item.querySelector("img");
+      const img = {
+        src: imgEle.src || "",
+        alt: imgEle.alt || "",
+      };
+
       const link = item.href;
-      if (link && link.includes(MAIN_DOMAIN)) {
-        newsLinks.push(link);
-      }
-    });
-    await highlightAElements.forEach((item) => {
-      const link = item.href;
-      if (link && link.includes(MAIN_DOMAIN)) {
-        newsLinks.push(link);
+      if (link && link.includes(MAIN_DOMAIN) && img.src) {
+        newsLinks.push({ link, img });
       }
     });
 
@@ -109,9 +106,8 @@ const scrapeBDPratidinNews = async () => {
     await newsLinks.map(async (content, index) => {
       await saveToCollectedNews(content);
     });
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
-// scrapeBDPratidinNews();
-module.exports = scrapeBDPratidinNews;
+// scrapeAmarsangbadNews();
+module.exports = scrapeAmarsangbadNews;

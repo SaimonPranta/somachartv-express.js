@@ -1,45 +1,59 @@
 const mongoose = require("mongoose");
 
-const collectedNewsSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  htmlDescription: {
-    type: String,
-    required: true
-  },
-  images: [new mongoose.Schema({
-    src: {
+const collectedNewsSchema = new mongoose.Schema(
+  {
+    title: {
       type: String,
-      required: true
+      required: true,
     },
-    alt: {
-      type: String
+    htmlDescription: {
+      type: String,
+      required: true,
     },
-    figcaption: {
-      type: String
+    images: [
+      new mongoose.Schema({
+        src: {
+          type: String,
+          required: true,
+        },
+        alt: {
+          type: String,
+        },
+        figcaption: {
+          type: String,
+        },
+      }),
+    ],
+    category: {
+      route: {
+        type: String,
+      },
+      label: {
+        type: String,
+      },
     },
-  })],
-  category: {
-    type: String,
-    required: true
+    subcategory: {
+      route: {
+        type: String,
+      },
+      label: {
+        type: String,
+      },
+    },
+    sourceUrl: {
+      type: String,
+      required: true,
+    },
+    failedProcessCount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
-  subcategory: {
-    type: String,
-  },
-  sourceUrl: {
-    type: String,
-    required: true
-  },
-  failedProcessCount: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-}, {
-  timestamps: true
-});
+  {
+    timestamps: true,
+  }
+);
 
 const CollectedNewsCollection = new mongoose.model(
   "collected_news",
