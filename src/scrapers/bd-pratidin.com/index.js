@@ -123,5 +123,5 @@ const scrapeSomoyNews = async () => {
   }
 };
 
-scrapeSomoyNews();
+// scrapeSomoyNews();
 module.exports = scrapeSomoyNews;
