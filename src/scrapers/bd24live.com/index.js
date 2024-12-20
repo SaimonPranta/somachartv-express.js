@@ -1,5 +1,5 @@
 const filterHTML = require("../../shared/utilize/filterHTML");
-const getWebpageDocument = require("../../shared/utilize/getWebpageDocument");
+const getWebpageDocument = require("../../shared/utilize/getWebpageHTML");
 const saveToCollectedNews = require("../../shared/utilize/saveToCollectedNews");
 
 
