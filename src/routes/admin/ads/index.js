@@ -92,7 +92,7 @@ router.put("/", async (req, res) => {
     let image = req.files
     let updateAds = null
     if (image) {
-      image = req.files?.img
+      image = req.files.img
       const imageExt = path.extname(image.name)
       const imageName = `${image.name.replace(imageExt, "")}_${Date.now()}${getRandomNumber()}${imageExt}`
       image.name = imageName

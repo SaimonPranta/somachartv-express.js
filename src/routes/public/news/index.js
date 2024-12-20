@@ -104,20 +104,7 @@ router.get("/:id", async (req, res) => {
       { new: true }
     );
 
-    // if (news.category) {
-    //   const categories = await CategoriesCollection.findOne({
-    //     label: news.category,
-    //   });
-    //   news._doc["categoriesRoute"] = categories.route;
-    //   if (news.subcategory) {
-    //     const subcategoryInfo = await categories?.subCategories?.find(
-    //       (routeInfo) => routeInfo.label === news.subcategory
-    //     );
-    //     if (subcategoryInfo) {
-    //       news._doc["subCategoriesRoute"] = subcategoryInfo.route;
-    //     }
-    //   }
-    // }
+   
     if (news.htmlDescription) {
       let updateHtmlDescription = "";
 

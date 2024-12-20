@@ -5,8 +5,12 @@ const EmployCollection = require("../../../DB/Modals/employ");
 
 router.get("/check-token", async (req, res) => {
   try {
-    let token = req.headers?.authorization?.split(" ");
+    let token = req.headers.authorization;
+    if (token) {
+      token = token.split(" ");
+    }
     if (!token || !token[1]) {
+      return res.json({ message: "Unauthorize attempt" });
     }
     token = token[1];
 
@@ -23,7 +27,6 @@ router.get("/check-token", async (req, res) => {
 
     res.json({ message: "Unauthorized attempt" });
   } catch (error) {
-    
     res.json({ message: "Internal server error" });
   }
 });
@@ -47,7 +50,6 @@ router.post("/", async (req, res) => {
     );
     res.json({ data, token });
   } catch (error) {
-    
     res.json({ message: "Internal server error" });
   }
 });
