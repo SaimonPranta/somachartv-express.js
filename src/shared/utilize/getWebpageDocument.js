@@ -15,7 +15,4 @@ const getWebpageDocument = async (link) => {
 };
 
 
-
-
-
 module.exports = getWebpageDocument;
