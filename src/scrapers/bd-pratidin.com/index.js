@@ -1,5 +1,5 @@
 const filterHTML = require("../../shared/utilize/filterHTML");
-const getWebpageDocument = require("../../shared/utilize/getWebPageDocument");
+const getWebpageDocument = require("../../shared/utilize/getWebpageHTML");
 const saveToCollectedNews = require("../../shared/utilize/saveToCollectedNews");
 const MAIN_DOMAIN = "https://www.bd-pratidin.com";
 
