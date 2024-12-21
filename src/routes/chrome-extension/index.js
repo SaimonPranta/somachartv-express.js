@@ -59,11 +59,10 @@ router.post("/send-news", async (req, res) => {
         message: "_id, title, modifyTitle, modifyHtmlDescription, modifyDescription are required"
       });
     }
-    if (
-      !title.length ||
-      !modifyTitle.length ||
-      !modifyHtmlDescription.length ||
-      !modifyDescription.length
+    if ( 
+      modifyTitle.length < 4 ||
+      modifyHtmlDescription.length < 4 ||
+      modifyDescription.length < 4 
     ) {
       return res.json({
         message: "title, modifyTitle, modifyHtmlDescription, modifyDescription length are required"
