@@ -3,6 +3,7 @@ const scrapeBD24LiveNews = require("./bd24live.com/index");
 const scrapeBDPratidinNews = require("./bd-pratidin.com/index");
 const scrapeAmarsangbadNews = require("./amarsangbad.com/index");
 const scrapeIttefaqNews = require("./ittefaq.com.bd/index");
+// const scrapeKalerkanthoNews = require("./kalerkantho.com");
 
 const waitHere = () => {
   let intervalTime = 15 * 60 * 1000; // 15 minutes
@@ -33,3 +34,7 @@ const startScrape = async () => {
 };
 
 startScrape();
+
+
+// Scrape not working list 
+// kalerkantho.com

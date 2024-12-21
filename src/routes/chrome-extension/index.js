@@ -56,7 +56,7 @@ router.post("/send-news", async (req, res) => {
       !modifyDescription
     ) {
       return res.json({
-        message: "Something is wrong, please try again letter"
+        message: "_id, title, modifyTitle, modifyHtmlDescription, modifyDescription are required"
       });
     }
     if (
@@ -66,8 +66,8 @@ router.post("/send-news", async (req, res) => {
       !modifyDescription.length
     ) {
       return res.json({
-        message: "Something is wrong, please try again letter"
-      });
+        message: "title, modifyTitle, modifyHtmlDescription, modifyDescription length are required"
+      })
     }
 
     const isExist = await NewsCollection.findOne({
@@ -84,7 +84,7 @@ router.post("/send-news", async (req, res) => {
     if (isExist) {
       await CollectedNewsCollection.findOneAndDelete({ _id });
       return res.json({
-        message: "Something is wrong, please try again letter"
+        message: "This news are already exist"
       });
     }
 
@@ -156,9 +156,16 @@ router.post("/send-news", async (req, res) => {
   } catch (error) {
     console.log("error --->", error);
     res.json({
-      message: "Internal server error"
+      message: `Server error:-> ${error.message}`
     });
   }
 });
+const of = async = () => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
 
 module.exports = router;
