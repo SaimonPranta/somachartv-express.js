@@ -4,6 +4,7 @@ const NewsCollection = require("../../../DB/Modals/news");
 const getDocument = require("../../../shared/utilize/getDocument");
 const { JSDOM } = require("jsdom");
 const { createImgFrame } = require("./helper/utilitize");
+const getHotNews = require("./helper/functions/getHotNews");
 
 router.get("/sitemap", async (req, res) => {
   try {
@@ -12,11 +13,11 @@ router.get("/sitemap", async (req, res) => {
       .select("_id title category createdAt subcategory images updatedAt");
     res.json({
       success: true,
-      data: news
+      data: news,
     });
   } catch (error) {
     res.json({
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 });
@@ -39,7 +40,7 @@ router.get("/", async (req, res) => {
     if (search && search !== "undefined") {
       const searchQuery = [
         { title: new RegExp(search, "i") },
-        { description: new RegExp(search, "i") }
+        { description: new RegExp(search, "i") },
       ];
       orQuery = [...orQuery, ...searchQuery];
     }
@@ -50,14 +51,11 @@ router.get("/", async (req, res) => {
       // ];
       // orQuery = [...orQuery, ...searchQuery]
       await categoryList.forEach((currentCategory) => {
-        console.log("currentCategory =>", currentCategory);
         orQuery.push({ "category.label": currentCategory });
       });
     }
-    query["$or"] = orQuery;
     if (orQuery.length) {
-      console.log("orQuery ==>", orQuery);
-      console.log("query ==>", query);
+      query["$or"] = orQuery;
     }
 
     const news = await NewsCollection.find({ ...query })
@@ -65,11 +63,11 @@ router.get("/", async (req, res) => {
       .sort({ createdAt: -1 });
     res.json({
       success: true,
-      data: news
+      data: news,
     });
   } catch (error) {
     res.json({
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 });
@@ -87,7 +85,7 @@ router.get("/sort", async (req, res) => {
 
     if (skip >= totalNews) {
       return res.json({
-        message: "All news are already loaded"
+        message: "All news are already loaded",
       });
     }
 
@@ -108,11 +106,25 @@ router.get("/sort", async (req, res) => {
     res.json({
       data: newList,
       page: page,
-      total: totalNews
+      total: totalNews,
     });
   } catch (error) {
     res.json({
-      message: "Internal server error"
+      message: "Internal server error",
+    });
+  }
+});
+router.get("/today-hot-news", async (req, res) => {
+  try {
+    const currentTime = new Date();
+    let newList = await getHotNews(currentTime);
+    res.json({
+      data: newList,
+    });
+  } catch (error) {
+    console.log("error ==>", error);
+    res.json({
+      message: "Internal server error",
     });
   }
 });
@@ -163,11 +175,11 @@ router.get("/:id", async (req, res) => {
     }
     res.json({
       success: true,
-      data: news
+      data: news,
     });
   } catch (error) {
     res.json({
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 });
