@@ -137,7 +137,6 @@ router.post("/send-news", async (req, res) => {
       updateInfo["subcategory"] = subcategoryInfo;
     }
     const data = await NewsCollection.create(updateInfo);
-    console.log("data ==>>", data);
     if (data) {
       await CollectedNewsCollection.findOneAndDelete({ _id });
       await Promise.all(
@@ -153,7 +152,6 @@ router.post("/send-news", async (req, res) => {
 
     res.json({ data: [] });
   } catch (error) {
-    console.log("error --->", error);
     res.json({
       message: `Server error:-> ${error.message}`
     });

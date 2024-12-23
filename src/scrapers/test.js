@@ -12,7 +12,6 @@ const getnews = async (
     const document = getDocument(webPage);
 
     const h1 = document.querySelector("h1");
-    console.log("h1 ==>>", h1.innerHTML);
 
     let articles = {};
 
@@ -21,7 +20,6 @@ const getnews = async (
       return;
     }
     const title = await titleElements?.textContent;
-    console.log("title ==>>", title)
 
     const newsContainer = await document.querySelector(".story-content");
 
@@ -44,15 +42,11 @@ const getnews = async (
 
     const imageElements = await document.querySelectorAll("figure");
     // const imageElements = await newsContainer.querySelectorAll("img");
-    console.log("imageElements", imageElements)
-    console.log("imageElements", imageElements.length)
 
-    console.log('imageElements ==>>', imageElements.length)
     if (!imageElements || !imageElements.length) {
       return articles;
     }
     const images = await Array.from(imageElements).map((img) => {
-        console.log("img ========>>>", img.innerHTML)
       return {
         src: img?.src || "",
         alt: img?.alt || "",
@@ -64,7 +58,6 @@ const getnews = async (
       return {};
     }
     const paragraphsElements = await contentBody.querySelectorAll("p");
-    console.log("paragraphsElements ==>>", paragraphsElements)
     if (!paragraphsElements || !paragraphsElements.length) {
       return;
     }
@@ -94,7 +87,6 @@ const getnews = async (
       };
     }
 
-    console.log("articles ==>>", articles);
     return articles;
   } catch (error) {
     console.log("error ===>>", error);

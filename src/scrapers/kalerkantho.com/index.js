@@ -12,13 +12,6 @@ const getNewsDetails = async (info) => {
     if (!document) {
       return;
     }
-    // const imgList = document.querySelectorAll("img");
-
-    // console.log("imgList ==>", imgList.length);
-
-    // imgList.forEach((item) => {
-    //   console.log("item -->>", item.src);
-    // });
 
     const imgContainer = document.querySelector(".content-details");
     const newsContainer = document.querySelector(".details-content");
@@ -55,8 +48,6 @@ const getNewsDetails = async (info) => {
     });
 
     htmlDescription = await filterHTML(htmlDescription);
-
-    console.log("htmlDescription -->", htmlDescription)
 
     if (!title && !htmlDescription && !images.length) {
       return null;

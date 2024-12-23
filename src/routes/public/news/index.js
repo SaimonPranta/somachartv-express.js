@@ -3,27 +3,33 @@ const CategoriesCollection = require("../../../DB/Modals/categories");
 const NewsCollection = require("../../../DB/Modals/news");
 const getDocument = require("../../../shared/utilize/getDocument");
 const { JSDOM } = require("jsdom");
-const {createImgFrame} = require("./helper/utilitize")
+const { createImgFrame } = require("./helper/utilitize");
 
 router.get("/sitemap", async (req, res) => {
   try {
-    const news = await NewsCollection.find().sort({createdAt: -1}).select("_id title category createdAt subcategory images updatedAt")
+    const news = await NewsCollection.find()
+      .sort({ createdAt: -1 })
+      .select("_id title category createdAt subcategory images updatedAt");
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
 router.get("/", async (req, res) => {
   try {
     const { category, subcategory, search, sort } = req.query;
-
+    let categoryList = [];
+    if (req.query && req.query.categoryList) {
+      categoryList = JSON.parse(req.query.categoryList);
+    }
     const limit = Number(req.query.limit) || 20;
     const query = {};
+    let orQuery = [];
     if (category && category !== "undefined") {
       query["category.label"] = category;
     }
@@ -31,22 +37,39 @@ router.get("/", async (req, res) => {
       query["subcategory.label"] = subcategory;
     }
     if (search && search !== "undefined") {
-      query["$or"] = [
+      const searchQuery = [
         { title: new RegExp(search, "i") },
-        { description: new RegExp(search, "i") },
+        { description: new RegExp(search, "i") }
       ];
+      orQuery = [...orQuery, ...searchQuery];
     }
+    if (categoryList && categoryList.length) {
+      // const searchQuery = [
+      //   { title: new RegExp(search, "i") },
+      //   { description: new RegExp(search, "i") },
+      // ];
+      // orQuery = [...orQuery, ...searchQuery]
+      await categoryList.forEach((currentCategory) => {
+        console.log("currentCategory =>", currentCategory);
+        orQuery.push({ "category.label": currentCategory });
+      });
+    }
+    query["$or"] = orQuery;
+    if (orQuery.length) {
+      console.log("orQuery ==>", orQuery);
+      console.log("query ==>", query);
+    }
+
     const news = await NewsCollection.find({ ...query })
       .limit(limit)
       .sort({ createdAt: -1 });
-console.log("news ===>>", news)
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -64,7 +87,7 @@ router.get("/sort", async (req, res) => {
 
     if (skip >= totalNews) {
       return res.json({
-        message: "All news are already loaded",
+        message: "All news are already loaded"
       });
     }
 
@@ -85,11 +108,11 @@ router.get("/sort", async (req, res) => {
     res.json({
       data: newList,
       page: page,
-      total: totalNews,
+      total: totalNews
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -104,20 +127,19 @@ router.get("/:id", async (req, res) => {
       { new: true }
     );
 
-   
     if (news.htmlDescription) {
       let updateHtmlDescription = "";
 
       const document = await getDocument(news.htmlDescription);
       const paragraphs = document.querySelectorAll("p");
-      const paragraphImg = news.images.slice(1, news.images.length)
+      const paragraphImg = news.images.slice(1, news.images.length);
       const images = paragraphImg;
       const result = [];
       let imgIndex = 0;
 
       const imgPosition = Math.floor(paragraphs.length / images.length);
       await paragraphs.forEach((el, index) => {
-        const mainIndex = index + 1; 
+        const mainIndex = index + 1;
         updateHtmlDescription += el.outerHTML;
         if (
           imgIndex < images.length &&
@@ -132,22 +154,20 @@ router.get("/:id", async (req, res) => {
           //   // imgEle.src = imgInfo.src;
           // }
           // imgEle.alt = imgInfo.alt || news;
- 
+
           updateHtmlDescription += createImgFrame(imgInfo, news);
           imgIndex++;
         }
-        
-      }); 
-      news = await {...news._doc , updateHtmlDescription}
+      });
+      news = await { ...news._doc, updateHtmlDescription };
     }
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
-    
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -171,4 +191,3 @@ des.forEach((el, index) => {
     imgIndex++;
   }
 });
-
