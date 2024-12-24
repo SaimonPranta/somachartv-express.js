@@ -11,13 +11,15 @@ router.get("/sitemap", async (req, res) => {
     const news = await NewsCollection.find()
       .sort({ createdAt: -1 })
       .select("_id title category createdAt subcategory images updatedAt");
+    console.log("total new count form sitemap ==>", news.length);
+
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -40,7 +42,7 @@ router.get("/", async (req, res) => {
     if (search && search !== "undefined") {
       const searchQuery = [
         { title: new RegExp(search, "i") },
-        { description: new RegExp(search, "i") },
+        { description: new RegExp(search, "i") }
       ];
       orQuery = [...orQuery, ...searchQuery];
     }
@@ -63,11 +65,11 @@ router.get("/", async (req, res) => {
       .sort({ createdAt: -1 });
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -85,7 +87,7 @@ router.get("/sort", async (req, res) => {
 
     if (skip >= totalNews) {
       return res.json({
-        message: "All news are already loaded",
+        message: "All news are already loaded"
       });
     }
 
@@ -106,11 +108,11 @@ router.get("/sort", async (req, res) => {
     res.json({
       data: newList,
       page: page,
-      total: totalNews,
+      total: totalNews
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -119,12 +121,12 @@ router.get("/today-hot-news", async (req, res) => {
     const currentTime = new Date();
     let newList = await getHotNews(currentTime);
     res.json({
-      data: newList,
+      data: newList
     });
   } catch (error) {
     console.log("error ==>", error);
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -175,11 +177,11 @@ router.get("/:id", async (req, res) => {
     }
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
