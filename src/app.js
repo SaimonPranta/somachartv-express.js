@@ -4,8 +4,10 @@ const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 require("./DB/connections")
 require("./scrapers/index")
+require("./schedules/index")
 const app = express()
 const PORT = 8001 || precess.env.PORT
+
 
 
 // App Configuration

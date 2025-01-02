@@ -13,11 +13,11 @@ const choseSecret = () => {
 
 const authenticate = async () => {
   try {
-    const chosedSecret = choseSecret()
-    console.log("chosedSecret ===>>", chosedSecret)
+    const secretPosition = choseSecret()
+    console.log("secretPosition ===>>", secretPosition)
     const auth = new google.auth.GoogleAuth({
       // keyFile: KEY_PATH, // Use the path to the JSON file
-      credentials: googleCrawlerSecrets[chosedSecret],  
+      credentials: googleCrawlerSecrets[secretPosition],  
       scopes: ["https://www.googleapis.com/auth/indexing"]
     });
 
@@ -56,54 +56,8 @@ const notifyGoogle = async (url, type = "URL_UPDATED") => {
 };
 
 // Example usage (uncomment the line below to test)
-// notifyGoogle("https://somacharnews.com/news/6770cb827f47a62ba2d95555"); // Replace with your URL
+// notifyGoogle("https://somacharnews.com/news/6776afa35ae5c1207a8b880d"); 
 
  
 module.exports = notifyGoogle;
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const notifyAllNews = async () => {
-  try {
-    const newsList = await NewsCollection.find({
-      $or: [
-        { "googleIndexInfo.indexed": false },
-        { googleIndexInfo: { $exists: false } }
-      ]
-    })
-      .limit(310)
-      .select("_id googleIndexInfo");
-    let totalCowlCount = 0;
-    Promise.all(
-      newsList.map(async (news, index) => {
-        try {
-          if (news && news.googleIndexInfo && news.googleIndexInfo.indexed) {
-            return;
-          }
-          const newsDetailsPageUrl = `https://somacharnews.com/news/${news._id}`;
-          const notifyResponse = await notifyGoogle(newsDetailsPageUrl);
-
-          if (notifyResponse) {
-            totalCowlCount = totalCowlCount + 1;
-            await NewsCollection.findOneAndUpdate(
-              { _id: news._id },
-              {
-                googleIndexInfo: {
-                  indexed: true,
-                  date: new Date()
-                }
-              }
-            );
-            await sleep(2000);
-          }
-        } catch (error) {
-          console.log("error ===>>", error);
-        }
-      })
-    );
-
-  } catch (error) {
-    console.log("error ===>>", error);
-  }
-};
-
-// notifyAllNews();
