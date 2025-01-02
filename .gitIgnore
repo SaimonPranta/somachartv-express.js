@@ -1,0 +1,6 @@
+ 
+node_modules
+# googleSecret.json
+secrets.txt
+secrets/*
+ 

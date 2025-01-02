@@ -1,0 +1,33 @@
+{
+  "name": "somachartv.com",
+  "version": "1.0.0",
+  "description": "The Newspaper",
+  "main": "index.js",
+  "npm": "v21.0.0",
+  "scripts": {
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js",
+    "build": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.1",
+    "express-fileupload": "^1.5.0",
+    "google-auth-library": "^9.15.0",
+    "googleapis": "^144.0.0",
+    "image-downloader": "^4.3.0",
+    "jsdom": "^25.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.3",
+    "playwright": "^1.48.0",
+    "puppeteer": "^23.5.1",
+    "react-redux": "^9.1.0",
+    "redux": "^5.0.1"
+  }
+}
