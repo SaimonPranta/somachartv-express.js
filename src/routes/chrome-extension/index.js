@@ -27,6 +27,18 @@ router.get("/get-collected-news", async (req, res) => {
     });
   }
 });
+
+router.get("/delete-collected-news/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const news = await CollectedNewsCollection.findOneAndDelete({ _id: id });
+    res.json({ data: news });
+  } catch (error) {
+    res.json({
+      message: "Internal server error",
+    });
+  }
+});
 router.post("/send-news", async (req, res) => {
   try {
     const body = req.body;
@@ -166,7 +178,7 @@ router.post("/send-news", async (req, res) => {
         }
       );
     }
-    
+
     res.json({ data: [] });
   } catch (error) {
     res.json({
