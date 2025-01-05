@@ -8,6 +8,29 @@ const { getQueries, setFileName } = require("./utilities");
 const getDocument = require("../../../shared/utilize/getDocument");
 const notifyGoogleCrawlRequest = require("../../../googleAuth/notifyGoogleCrawlRequest");
 
+router.get("/total", async (req, res) => {
+  try {
+    const newsCount = {
+      total: 0,
+      today: 0,
+    };
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    let endOfDay = new Date(today.setHours(23, 59, 59, 999));
+    newsCount.total = await NewsCollection.countDocuments();
+    newsCount.today = await NewsCollection.countDocuments({
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
+  });
+    res.json({
+      data: newsCount,
+    });
+  } catch (error) {
+    console.log("error ==>", error)
+    res.json({
+      message: "Internal server error",
+    });
+  }
+});
 router.get("/", async (req, res) => {
   try {
     const limit = 24;
