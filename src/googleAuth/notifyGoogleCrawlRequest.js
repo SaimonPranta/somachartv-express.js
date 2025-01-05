@@ -1,23 +1,23 @@
 const { google } = require("googleapis");
 const path = require("path");
-const NewsCollection = require("../../../src/DB/Modals/news");
-const googleCrawlerSecrets = require("../../../src/shared/constants/googleCrawlerSecrets");
- const submitSitemap = require("../../../")
+const NewsCollection = require("../DB/Modals/news");
+const googleCrawlerSecrets = require("../shared/constants/googleCrawlerSecrets");
+const notifyGoogleSitemapUpdate = require("./notifyGoogleSitemapUpdate");
+
 const choseSecret = () => {
   global.currentSecretNumber = global.currentSecretNumber || 0;
   const currentPosition = global.currentSecretNumber;
-  global.currentSecretNumber = (currentPosition + 1) % googleCrawlerSecrets.length;
+  global.currentSecretNumber =
+    (currentPosition + 1) % googleCrawlerSecrets.length;
   return currentPosition;
 };
- 
 
 const authenticate = async () => {
   try {
-    const chosedSecret = choseSecret()
-    console.log("chosedSecret ===>>", chosedSecret)
+    const secretPosition = choseSecret();
     const auth = new google.auth.GoogleAuth({
       // keyFile: KEY_PATH, // Use the path to the JSON file
-      credentials: googleCrawlerSecrets[chosedSecret],  
+      credentials: googleCrawlerSecrets[secretPosition],
       scopes: ["https://www.googleapis.com/auth/indexing"]
     });
 
@@ -31,9 +31,11 @@ const authenticate = async () => {
   }
 };
 
-const notifyGoogle = async (url, type = "URL_UPDATED") => {
-  const indexing = await authenticate();
+const notifyGoogleCrawlRequest = async (url, type = "URL_UPDATED") => {
+  await notifyGoogleSitemapUpdate("sitemap.xml");
+  await notifyGoogleSitemapUpdate("image-sitemap.xml");
 
+  const indexing = await authenticate();
   const body = {
     url: url,
     type: type // 'URL_UPDATED' or 'URL_REMOVED'
@@ -56,9 +58,6 @@ const notifyGoogle = async (url, type = "URL_UPDATED") => {
 };
 
 // Example usage (uncomment the line below to test)
-// notifyGoogle("https://somacharnews.com/news/6770cb827f47a62ba2d95555"); // Replace with your URL
+// notifyGoogleCrawlRequest("https://somacharnews.com/news/6776afa35ae5c1207a8b880d");
 
- 
-module.exports = notifyGoogle;
-
- 
+module.exports = notifyGoogleCrawlRequest;

@@ -10,7 +10,7 @@ const sanitizeFileName = require("../../shared/utilize/sanitizeFileName");
 const fs = require("fs");
 const path = require("path");
 const { default: axios } = require("axios");
-const notifyGoogle = require("../../shared/utilize/notifyGoogle");
+const notifyGoogleCrawlRequest = require("../../googleAuth/notifyGoogleCrawlRequest");
 
 router.get("/get-collected-news", async (req, res) => {
   try {
@@ -153,7 +153,19 @@ router.post("/send-news", async (req, res) => {
       );
     }
     const newsDetailsPageUrl = `https://somacharnews.com/news/${data._id}`;
-    await notifyGoogle(newsDetailsPageUrl);
+    const notifyResponse = await notifyGoogleCrawlRequest(newsDetailsPageUrl);
+
+    if (notifyResponse) {
+      await NewsCollection.findOneAndUpdate(
+        { _id: data._id },
+        {
+          googleIndexInfo: {
+            indexed: true,
+            date: new Date(),
+          },
+        }
+      );
+    }
     
     res.json({ data: [] });
   } catch (error) {
@@ -169,7 +181,7 @@ const of = (async = () => {
 
 module.exports = router;
 
-// notifyGoogle("https://somacharnews.com/news/6770cb827f47a62ba2d95555")
+// notifyGoogleCrawlRequest("https://somacharnews.com/news/6770cb827f47a62ba2d95555")
 //   .then((data) => {
 //     console.log("data ---------->>>", data);
 //   })

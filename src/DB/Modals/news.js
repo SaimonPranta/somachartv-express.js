@@ -76,6 +76,15 @@ const newsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "employ",
     },
+    googleIndexInfo: {
+      indexed: {
+        type: Boolean,
+        default: false,
+      },
+      date: {
+        type: Date,
+      },
+    },
   },
   {
     timestamps: true,

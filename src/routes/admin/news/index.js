@@ -6,7 +6,7 @@ const { newsStoragePath } = require("../../../shared/constants/variables");
 const fs = require("fs");
 const { getQueries, setFileName } = require("./utilities");
 const getDocument = require("../../../shared/utilize/getDocument");
-const notifyGoogle = require("../../../shared/utilize/notifyGoogle");
+const notifyGoogleCrawlRequest = require("../../../googleAuth/notifyGoogleCrawlRequest");
 
 router.get("/", async (req, res) => {
   try {
@@ -88,7 +88,7 @@ router.post("/", async (req, res) => {
         src: fileName,
         file: file,
       };
-    }); 
+    });
     const document = await getDocument(htmlDescription);
 
     const paragraphList = await document.querySelectorAll("p");
@@ -128,14 +128,26 @@ router.post("/", async (req, res) => {
       })
     );
     const newsDetailsPageUrl = `https://somacharnews.com/news/${updateNews._id}`;
-    await notifyGoogle(newsDetailsPageUrl);
-    
+    const notifyResponse = await notifyGoogleCrawlRequest(newsDetailsPageUrl);
+
+    if (notifyResponse) {
+      await NewsCollection.findOneAndUpdate(
+        { _id: updateNews._id },
+        {
+          googleIndexInfo: {
+            indexed: true,
+            date: new Date(),
+          },
+        }
+      );
+    }
+
     res.json({
       success: true,
       data: updateNews,
       message: "Categories updated successfully",
     });
-  } catch (error) { 
+  } catch (error) {
     res.json({
       message: "Internal server error",
     });
@@ -168,7 +180,7 @@ router.put("/", async (req, res) => {
       return res.json({
         message: "Failed to update, news not found",
       });
-    } 
+    }
     images = await images.map((fileInfo, index) => {
       const imgKey = fileInfo.imgKey;
       const file = files[imgKey];
@@ -188,7 +200,7 @@ router.put("/", async (req, res) => {
         // src: fileName,
         // file: file,
       };
-    }); 
+    });
     const document = await getDocument(htmlDescription);
 
     const paragraphList = await document.querySelectorAll("p");
@@ -254,7 +266,7 @@ router.put("/", async (req, res) => {
       data: updateNews,
       message: "Categories updated successfully",
     });
-  } catch (error) { 
+  } catch (error) {
     res.json({
       message: "Internal server error",
     });
