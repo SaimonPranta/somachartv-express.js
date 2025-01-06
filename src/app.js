@@ -26,6 +26,7 @@ app.use("/media", require("./routes/media/index"))
 app.use("/public", require("./routes/public/index"))
 app.use("/admin", require("./routes/admin"))
 app.use("/chrome-extension", require("./routes/chrome-extension"))
+app.use("/backup", require("./routes/backup/index"))
 
 app.listen(PORT, () => {
     console.log(`Server is running on PORT:${PORT}`)

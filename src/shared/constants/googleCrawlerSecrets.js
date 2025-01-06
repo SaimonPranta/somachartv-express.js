@@ -149,37 +149,6 @@ const secretList = [
       "https://www.googleapis.com/robot/v1/metadata/x509/somachar-news-13%40somachar-news-13.iam.gserviceaccount.com",
     universe_domain: "googleapis.com",
   },
-  {
-    type: "service_account",
-    project_id: "somachar-news-15",
-    private_key_id: "73fbe5183b9ba98983b873ee78520a0de70ce785",
-    private_key:
-      "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQClA+iQ34sbF5tI\nQCFM9HTyKhDtyNbxAULIVnVCIIinCgwUFndbMzUDBXe+QikkA44E4+5xox0/POid\nsYVQNljoDZZw0vZUSjuYJVe7+gIQO8tpRTgGPwp7KSZSj5kbxl8FJzEj02FZySew\nyfc++rK/f7z1inrEaam6dCa70a2reTj1Ix0TkiGOO49kk6DS1g2tzbJbhQrjirVi\nzI/08+LtLUyZrY6ExsFT3CHgoqgUdlMO0DCKn1OCw0zN7zzgCdVdbzVSLAR+hj7j\n/fUEn54MDaK0NDNd+Qk9QtPC3hKnFHiH13ixk2TVntWveSyLThmHjEPWZ7d1E/oi\ndfJ6r3pxAgMBAAECggEAR+A18rSMINbdelEEsEJilgCgsxIiHYPRFPYjyRPmset8\na1uFzaG2W4SMLcEfrmImABdQCwtjd+IN6HIkgVXKz/jrKGWbigdzgcfyORyivXNu\nHIJb7sySwiagXKHTrPdw+AukKdiutK8brLOsEDCeny8CnWkeJGNp3J8vJ+wi22cU\nSK7pZ22VC6jTDqjYj5mK5UrZ04BWHT4YkqhFMm5hXPugTXo+0Wv81vxRNiJmxjXS\nJj0bNHufpDykuQGgp/y/mPQDVoi4JYhl99ddLDcnbQM5Pr5Kwe6ql5x/0MBYAiqH\n81QK2WXsb7wOrN/H/4s5tIIx7vR9d5Z0JzN/gKq/yQKBgQDdwWvrrDzzXThNKj9F\nNIMLGU/fKNYv/T5/8JqGePHlCHDZ/vQiNfvwlDTu91JDnOR6UltnvhZ5j+e38+Ud\nIVYNhPAQcq/YkCEO2+8NhZ2aZLkfTUro5sEuFTL2XNy122qxpyIoUgmXLwZKPLp4\n16kaIscyfFabSqNjHZss0n9+zwKBgQC+f2UHDcUGXMurMZh3vPClEoegPR7L/6Oq\nixCo1tJEGb73EcvXNYf70nUjSPzpC1IihjBKuxNQ3YeByfc9jtYmUSxd8LiS5jrB\nb6mOl2FB6Gn2Xy9fBK8t6RjR7Rj6Mm5xk1m7OQXZlMyJkxRSB04IavVmt3k5ePI7\nvvYVDtnCvwKBgHvej2oVy/YlHE3+S1lc+9Y3TWZaaUplK4RL4gU7ieNl06Pxxm1V\numWoY+kYPduGyBmL54MLq4I74DPhCRo8hNUIbRDC/3b5C35BXEcxW9fia4YQpsdy\nHnafYNg9BwyOhAq4UVw0dyb8HYdaZM8bqFnxE1QgIECecKXs48El1BIBAoGAXezA\nKjcu0tFEFldwvnDpEerN9kLMgXa9AqRohWbN64fqMTWUFLsvHgmJeelN0bWkPKN/\nAgm1H2TqoCKthat8iQ3y2yqKRtu/Uoq0xjp7WJy4SiJqX+YWXYOVmkPV0d61t8gY\nMQiPitUj+B0Notg5MEtUTd3epmisvqqL+JwG4E8CgYEAlDUV4zluJkOHifkQ19As\nb7IerBSvJZya8IoRwxgphKU5VoMJITRqzkjoUli7WNzxvWg7SaiQFioG2mxyblIx\nghBYK5pas8FcJr85Ec03oXfaKinDLMT5oOrkVKnUpxqP1bj5gk/tkgVI7LYqQ37d\nRAsVlPJd+5+6BHBkNa/RW8g=\n-----END PRIVATE KEY-----\n",
-    client_email: "somachar-news-15@somachar-news-15.iam.gserviceaccount.com",
-    client_id: "114507254656311444799",
-    auth_uri: "https://accounts.google.com/o/oauth2/auth",
-    token_uri: "https://oauth2.googleapis.com/token",
-    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-    client_x509_cert_url:
-      "https://www.googleapis.com/robot/v1/metadata/x509/somachar-news-15%40somachar-news-15.iam.gserviceaccount.com",
-    universe_domain: "googleapis.com",
-  },
-  {
-    type: "service_account",
-    project_id: "somachar-news-16",
-    private_key_id: "1b06436091ccb9982932b9b1a329d7fcb35b7ba7",
-    private_key:
-      "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC6+Rw9y5c7wnPV\nYc4BcFBkzTPUrZHOyPqkI4ex2Z6f+tcXeL8mqr4nKBnuYoCr/l8RQZh82lnMJOmD\nPQCR5tR939UxHABBaOU+f15ra3LQt2X/hdL2SVMA6Wa8+pwRN8fNYomQlYB4/jit\nXhlsQQSioSAERJU8QwgKSkamwUnzjwyMUzAlAuO0EmxrwIZorFXVSPxqNr4du+D0\nKeuNrts0xN24o5tlYkGTSnn+bm5INbeejob3XOSdkTJ6yMA89evcZjquWEtym40d\nUBx2fqi0I2WoQNp4vOVi0yesnwGl0K0TC22leuYmDWs2L3g670Eorvke5Mspdthz\nDiYZJH6/AgMBAAECggEAJV1tKGhMU9P7ZBREoAL6/foINqNtNR7y/+Rd1MwBqETv\nwTAPO0H5+EdKT1p+DmEqTH+IYsMcGPDzfZeuSnoP0wvtRgAriObWkVPQ4bS6YD2W\nc6chzrg+jzsVngSTNdmo40Gi7jMCVquvVe4tNHYV4A5FILU4Aa//plbLob2U8sg2\nqhTzclNvLb71A2tQD9PZeyjcGuIW1WvpXOCFXt+wWrLQavKwD/mNLD8f9tdB2zHi\nw9lbSL1U7/aAPaWMTqKKBjKR0ZeDCzmwprLWOGmII/QKzP+pB94f+GJ1wki1qmmU\nSWFXi2+WrM/kneI2Pxu3JAsC/acEPtnJF9QRg+/k0QKBgQDz9U1ITV+ERPGg4uOn\nH8vQYOwpsJVDCAu4VC7LiqPicWTDVLds1KGMuqlSVKQ1vys6KQI0ZnA7we+sdLMw\nLz0/Q1ZhQIbJmcbj7FVPqE4N8M64M4x/+I3xkroC59s2Lup2qak3vycdlSyJ4x01\nqiQvSvtD82p8mel6ZYAeW+wEdwKBgQDEM7wMfI3Snix9EVlusb7bNGZgTh8Xhkzd\n7CfhsKdCwi4F1QQvS5XbklqqkQouytbjYS2oCnjLZAmBuH0o7ELG0Jnx2+DHthAQ\npKVnMrPeJlR8pcbTCI5XoG9/QRI3VseW0MqrFciSRw9Vb1G+j+UUzX63cZw91OIG\nMvut3UnR+QKBgQDUKEYXVMJ2YwbHZcmZM7up8kAvWVPVQY//s6YmeOFhMj/w5yHF\nUX1Ux5gs81MDMsdDAxrZuyRrs5LdpXeXtd1LwSHD3bvaYxNmb8cZSULoOL1tz9am\nC+BVb8a4dC5dhpt8qrtwsZowzeQ33f0vCFIDlu/A/lVjGu7C9LZgsIwmrQKBgD3C\n41Ey7Bn+vJZqHbLgtOmf5xItxU/McOny6uL6jsxO/9nKIlUZAAVsXqoOmhv8sgRF\nlO+uzDOKPAvfnVaCeMrI44zk4C89unTiv0ZrCX/GpRXPwXSw3s3qrO5r92YAJTfu\nZb3RT5/sSoFkV2EbPst7nIX2d25nUvcMmXkzjYdRAoGBAK8sQiFbEdDyPF6hR1jw\n+URGRrFblOTp2XxKdquOdRYYp3yFXRkB5T2W1zqxd5Qw2ktD1y1cY7V6Gef2pLD3\nnmtlCf+RX06D/LK+FnvQmZRNCA6ZP9W5YPGN4B0mdI7of4SoOoqgNG72ftCxTFQS\ndKQ70J+BDqSkK3BVWBIlNTW6\n-----END PRIVATE KEY-----\n",
-    client_email: "somachar-news-16@somachar-news-16.iam.gserviceaccount.com",
-    client_id: "102147036780382017330",
-    auth_uri: "https://accounts.google.com/o/oauth2/auth",
-    token_uri: "https://oauth2.googleapis.com/token",
-    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-    client_x509_cert_url:
-      "https://www.googleapis.com/robot/v1/metadata/x509/somachar-news-16%40somachar-news-16.iam.gserviceaccount.com",
-    universe_domain: "googleapis.com",
-  },
-
   { 
     type: "service_account",
     project_id: "somachar-news-18",
@@ -195,36 +164,7 @@ const secretList = [
       "https://www.googleapis.com/robot/v1/metadata/x509/somachar-news-18%40somachar-news-18.iam.gserviceaccount.com",
     universe_domain: "googleapis.com",
   },
-  {
-    type: "service_account",
-    project_id: "somachar-news-18",
-    private_key_id: "60e9f1453a9dce9be28694c3461e023703eb0265",
-    private_key:
-      "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDld/YKXSGRjBtd\nF5zCpI6AoY7eQR7kWB/D72fT5uhmghE1eW7q5bu9pPLpfylvFJ4nzmZaH77dsbJm\npg+cLxeDNHa95Z2/6kz9GQ0f0D9mSK4fe0gzJ7QGalp8myY+fC7L0oxj4TZoPZEA\nFKrXeQ8GkbryPuUqI0hcDii60nlDb0DZJinAFHF9FI1CbFnx+TC+8vr64ygZT7zc\n9C904bcVXo+ajIyfmEcNtCigafzd0Pl1OJWM1QIi83JcBz7Ny0XjQZUmZNQ2+RX+\n/QwP35RU8sJlZzuux/Y4QP4E7sfB+iNknVKVO32/DzgPnYZ0N49QPY34Y5Xg6e01\nReUA2r11AgMBAAECggEAAbSbWxwT5uOOmXXo2RM3XOC4C4wUdEUpsM0qezLBcHvj\n2qm/3blEcPM1I454644Z6a5NqInq0QIlt6HhMQ9c7F/pr+x9Zi/PAH0MLU4d7lLs\noefvSKGrPupLWZcrI3TM7G4JFrTDedpjSlDpMtGkbRcSw7pBX2YW4H7BHL4qrl9g\nIqBSlD10fv4bfrACB5P8uVgh6Uh6w90bTMWeuLZimvDb69ksVlEFneKJyQcIT0TV\nCUDPgeKzCwtgPgQ8+H+n6OaZbgDeQMiFk2p0v/9Exd8VRYPLWgx9bR1ZG4ucltQp\nz1DnPjV6sG2bRNvhO8Zw6zwJjNYxVahJpQaQ0wZ4oQKBgQD5E4fudNv5fp7pTM8W\nVdjXhS0IYpo2SWCqfiIhJWs29gb2Sggad3zqlguezItjD1IZOQxpIIwZwRYVH4BU\nvWNfXko9ZJB81DUStcf7yJCHlBOeWMMKMSxT2Or5JuoMiqk9U0MzmUiqjHsDYnSs\n4OEIPkOfu3ynQ/RESgC5NIxP/QKBgQDr2OYAPClXTIBlZl8Yh+u7wet6kp+plFZS\nYL1ZfdtRJpsxobrhy2TM1kdVBh6Eebrnv5G1VGAlKDUu2wUhr9+KIL3B550Y7TuN\nff9LNDQXcPyFtyPTUmUGtnkdcxnbvqqVtG2F/GUTg+k7Kf2UdRnyuy5ZmCj89Q1z\nrB3uxbGw2QKBgHpaz9Gh8lWTj/jHVIuCTG1C7KZL2bmFPklCgP2LZimvnifqoiRu\nQhzy7G5ryKU253ugfKo/5NLZ+UETInV+O4yjwxB5kEjh7dhtF/plwin34dNNgzJE\niaP+0R7nsN3MV+raNg7o47t0GxHEkdBDAAiOnaWf8lIwnZPWTpisaaj5AoGAfaJC\nCzgBEbb34owg9jFZeuA3L0kx8iTJwwIze5uWm+kD3PF5WtR9MrymrP0gfpNV5CPh\nW4XB3alIg1g6qJJGcw8z5joaLnAZPCs1NnttkFsouZYwaF7I4EWNyQlKagtsVWkS\nusATm8y2DkU1BsNGek4Jx8JNe0qSyt6R52K6YCkCgYBcmsxGJ0CCp0/Yj4RNYMQm\nR8XZgU3rgk13J/ekg9DSW6kTcPWL/DhfHQf37XOHutaxIXa3OVvDoBB1NQa4oyBw\nU4oJtSQrqw5YjzGKk6uHGWLfqYPK+mazGvszp/kJpkCBYyoYNgKxr7KGlT6Agtnp\ncJExcCG85iuVE6LnbhOAhw==\n-----END PRIVATE KEY-----\n",
-    client_email: "somachar-news-18@somachar-news-18.iam.gserviceaccount.com",
-    client_id: "102123807337653131974",
-    auth_uri: "https://accounts.google.com/o/oauth2/auth",
-    token_uri: "https://oauth2.googleapis.com/token",
-    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-    client_x509_cert_url:
-      "https://www.googleapis.com/robot/v1/metadata/x509/somachar-news-18%40somachar-news-18.iam.gserviceaccount.com",
-    universe_domain: "googleapis.com",
-  },
-  {
-    type: "service_account",
-    project_id: "somachar-news-17",
-    private_key_id: "8a41fa01c03838bc6231aa0610d518318f293567",
-    private_key:
-      "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCtJ9RWvd69J5Je\njYirdGZ2vk1Kklgtzv8lUVuJJMaxUf2P/Y17ljZtyMl9HFuRFtahVIGt0Q39y1Za\nm/fx01Ui3sCo3DWESzXnOlykAqXw1u48XCYfSLp7BkCZ93O4yIPKfV49UsUESmOk\nXNPPhwRh1xSyklwAS1rtaZm/I+TYidPGrPZZzz7v4mwJL3XviilNd9wQrjkwS960\nIB4fzxX82Lbx/efMuBmsCyEYeAFQBg6cIjga48EJpBA5X3qFZp0K4MusVPg3WIWT\nAbNMHIZSkPpJQihnMUSeQmcUr9VA3UUm4UMEvwUnX3BY2QXLC8uI8I1OtQLWotTT\nxXJSCeMJAgMBAAECggEAARScVqQQbOJ/dLOCJfIVNho6/KiZYC7NnjUJ4tBoj4B1\nGjthMRiyE1ZjNdKcmn+3nDyHuHbon7vvjeOcL7Arigr1DZCzN6A/Bb0niRai+bPj\npcYxmYogWhvDFoWKErNTSYsQUJu7aEA9FdsGRNd2jj7o+DIhh2xw9LCPIazWtPMI\n6UyW8eo8hJs+mYF+AW4cFipHnNETAlmyS6Eu2qva+15icm4XdianrMhBujVkdsGS\nOO7GtifSgt6CYNKVRDcnv/JlEtuwcBUEyeFajxUb6zuCbw2805YQYuX29K5u2knB\nk4vGRRAUsp12dmSZCrkW1bJ+7XZm0GyOfpokItWjUQKBgQDwZhAiAQlzK6YyqM3E\nNIHfPxsfRbPVWWMaPuCDVAZcuJInSXnXV6PwQz1hXx9nWUoQGvZ1O3HpyrHkJ6Gd\n7XIRQpy6AbPGC5I+U+lm3sP1cJY5Ye9L7Vpl1JZH8ZLo7DvrbXIHpTp3hCiWOJf9\nfM25xdiEFgqdvVHEhWzZN2JDsQKBgQC4ZJpG7Ka/XxRRvMK20CpRB9jYzBz0OjUF\nCvnEC6IhRiIBJ7I4UOhZBfEIVVlT/ub92Z4e/KLMMotAi4Tk1NQlrvrKVDXPv48r\nKqlUUWJ5+iaSip+XwSOl+kDHbz0+gjThPhr4ZATsxK6ZvYUfXtO/NtLkLyXnsutX\nNAxXFBEi2QKBgFWNTPJ9AfrtrsDamBfaQ9nKIIHZkW082Wrus4GpNnZq7QB0Qpsj\nQmFv3Hk5m/hwq03d+pWv6RM1omc6v2ZvqSeBWDtN/cdeONZbkHWek4hWX+/d7YZM\n2t3gcPb7frfL0msvUORtpcgAzVzgmR6J+sDBKxOesHqAdIgGn70R27ORAoGAFRZ0\nSl4wJ7yw7zQeNJgT7tZt50VYnlm1zJDXxaLq9NE3fFhU2nnuSJgUW7afE6sYMbnc\nioCsAZxaLpSGK0FnzbN4PQFqcgrfTbmASgNQttBz7thprgpJkGbRV72SDH8JmyTm\nIrgVlBpeOXjiK5dFsh2L+sqllBzzKzLpol/KIekCgYEA1umIBezNWgqKQ0rXqzM+\nbFBabeupf4olAk4AiQ/2pbntE7Tgj3+8BBIEAvYL9cZV5uaRD6gWZ4yR1/8ITh5u\noXq+/Um85rl+8OgUqojrA8vCRUqRDe/z3t0wANBV4Tp8aR9aY77T95AeDOY/4pGK\njUHz0c4m27yxMLkjzOTwKlg=\n-----END PRIVATE KEY-----\n",
-    client_email: "somachar-news-17@somachar-news-17.iam.gserviceaccount.com",
-    client_id: "110537460250076308175",
-    auth_uri: "https://accounts.google.com/o/oauth2/auth",
-    token_uri: "https://oauth2.googleapis.com/token",
-    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-    client_x509_cert_url:
-      "https://www.googleapis.com/robot/v1/metadata/x509/somachar-news-17%40somachar-news-17.iam.gserviceaccount.com",
-    universe_domain: "googleapis.com",
-  },
+   
 ];
 
 module.exports = secretList;

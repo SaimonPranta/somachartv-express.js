@@ -11,8 +11,7 @@ const choseSecret = () => {
 
 // Authenticate for Search Console API
 const authenticateSearchConsole = async () => {
-  try {
-// 0, 1, 2, 3, 4, 5, 6, 7, 8,9, 12,
+  try { 
     const secretPosition = choseSecret();
     console.log("Using secretPosition:", secretPosition);
     const auth = new google.auth.GoogleAuth({
