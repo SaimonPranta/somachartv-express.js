@@ -8,7 +8,8 @@ const createImgFrame = (imgInfo, newsInfo) => {
   const figcaptionEle = document.createElement("figcaption");
 
   if (imgInfo.src) {
-    imgEle.src = `http://localhost:8001/${imgInfo.src}`;
+    // imgEle.src = `http://localhost:8001/${imgInfo.src}`;
+    imgEle.src = `/api/media/${imgInfo.src}`;
     // imgEle.src = imgInfo.src;
   }
   imgEle.width = 800;
