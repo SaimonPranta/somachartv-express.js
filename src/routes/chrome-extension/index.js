@@ -16,7 +16,7 @@ router.get("/get-collected-news", async (req, res) => {
   try {
     const newsCount = await CollectedNewsCollection.countDocuments({});
     const skip = await getRandomNumber(
-      Number(newsCount - 11),
+      Number(newsCount - 21),
       Number(newsCount - 1)
     );
     const news = await CollectedNewsCollection.findOne({}).skip(skip);
