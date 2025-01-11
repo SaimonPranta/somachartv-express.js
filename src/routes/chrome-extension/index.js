@@ -15,6 +15,13 @@ const notifyGoogleCrawlRequest = require("../../googleAuth/notifyGoogleCrawlRequ
 router.get("/get-collected-news", async (req, res) => {
   try {
     const newsCount = await CollectedNewsCollection.countDocuments({});
+    if (newsCount < 1) {
+      return res.json({
+        message: "No news found to modify"
+      });
+    }
+    const avoid = 11;
+    let startFrom = newsCount - avoid;
     const skip = await getRandomNumber(
       Number(newsCount - 11),
       Number(newsCount - 1)
@@ -23,7 +30,7 @@ router.get("/get-collected-news", async (req, res) => {
     res.json({ data: news });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -35,7 +42,7 @@ router.get("/delete-collected-news/:id", async (req, res) => {
     res.json({ data: news });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -55,7 +62,7 @@ router.post("/send-news", async (req, res) => {
       modifyTitle,
       modifyHtmlDescription,
       modifyDescription,
-      images,
+      images
     } = body;
     let category = categoryInfo.route;
     let categoryLabel = categoryInfo.label;
@@ -70,7 +77,7 @@ router.post("/send-news", async (req, res) => {
     ) {
       return res.json({
         message:
-          "_id, title, modifyTitle, modifyHtmlDescription, modifyDescription are required",
+          "_id, title, modifyTitle, modifyHtmlDescription, modifyDescription are required"
       });
     }
     if (
@@ -80,25 +87,25 @@ router.post("/send-news", async (req, res) => {
     ) {
       return res.json({
         message:
-          "title, modifyTitle, modifyHtmlDescription, modifyDescription length are required",
+          "title, modifyTitle, modifyHtmlDescription, modifyDescription length are required"
       });
     }
 
     const isExist = await NewsCollection.findOne({
       $or: [
         {
-          "source.title": title,
+          "source.title": title
         },
         {
-          "source.sourceUrl": sourceUrl,
-        },
-      ],
+          "source.sourceUrl": sourceUrl
+        }
+      ]
     }).select("_id");
 
     if (isExist) {
       await CollectedNewsCollection.findOneAndDelete({ _id });
       return res.json({
-        message: "This news are already exist",
+        message: "This news are already exist"
       });
     }
 
@@ -130,7 +137,7 @@ router.post("/send-news", async (req, res) => {
         return {
           ...imgInfo,
           src: updatePath,
-          sourceSrc: src,
+          sourceSrc: src
         };
       })
     );
@@ -145,8 +152,8 @@ router.post("/send-news", async (req, res) => {
       images: [...updateImageList],
       source: {
         title: title,
-        sourceUrl: sourceUrl,
-      },
+        sourceUrl: sourceUrl
+      }
     };
     if (subcategoryLabel) {
       updateInfo["subcategory"] = subcategoryInfo;
@@ -173,8 +180,8 @@ router.post("/send-news", async (req, res) => {
         {
           googleIndexInfo: {
             indexed: true,
-            date: new Date(),
-          },
+            date: new Date()
+          }
         }
       );
     }
@@ -182,7 +189,7 @@ router.post("/send-news", async (req, res) => {
     res.json({ data: [] });
   } catch (error) {
     res.json({
-      message: `Server error:-> ${error.message}`,
+      message: `Server error:-> ${error.message}`
     });
   }
 });
@@ -192,11 +199,3 @@ const of = (async = () => {
 });
 
 module.exports = router;
-
-// notifyGoogleCrawlRequest("https://somacharnews.com/news/6770cb827f47a62ba2d95555")
-//   .then((data) => {
-//     console.log("data ---------->>>", data);
-//   })
-//   .catch((error) => {
-//     console.log("error -------------->>>", error);
-//   });
