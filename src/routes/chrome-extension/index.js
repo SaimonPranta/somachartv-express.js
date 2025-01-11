@@ -19,7 +19,8 @@ router.get("/get-collected-news", async (req, res) => {
     const newsCount = await CollectedNewsCollection.countDocuments({});
     if (newsCount === 0) {
       return res.json({
-        message: "No news found to modify"
+        message: "No news found to modify",
+        totalNews: newsCount
       });
     }
     const avoid = 21;
