@@ -106,7 +106,10 @@ const scrapeAmarsangbadNews = async () => {
     await newsLinks.map(async (content, index) => {
       await saveToCollectedNews(content);
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log("error -->>", error)
+
+  }
 };
 
 // scrapeAmarsangbadNews();

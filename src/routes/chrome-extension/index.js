@@ -14,20 +14,44 @@ const notifyGoogleCrawlRequest = require("../../googleAuth/notifyGoogleCrawlRequ
 
 router.get("/get-collected-news", async (req, res) => {
   try {
+    global.processingNewsList = global.processingNewsList || [];
+
     const newsCount = await CollectedNewsCollection.countDocuments({});
-    if (newsCount < 1) {
+    if (newsCount === 0) {
       return res.json({
         message: "No news found to modify"
       });
     }
-    const avoid = 11;
+    const avoid = 21;
     let startFrom = newsCount - avoid;
+    if (startFrom < 0) {
+      startFrom = 0;
+    }
     const skip = await getRandomNumber(
-      Number(newsCount - 11),
+      Number(startFrom),
       Number(newsCount - 1)
     );
     const news = await CollectedNewsCollection.findOne({}).skip(skip);
-    res.json({ data: news });
+
+    if (!news || !news._id) {
+      return res.json({
+        message: "No news found to modify"
+      });
+    }
+    const newsID = news._id.toString()
+    if (global.processingNewsList.includes(newsID)) {
+      return res.json({
+        message: "This news already in processing"
+      });
+    } else {
+      global.processingNewsList.push(newsID);
+      setTimeout(() => {
+        global.processingNewsList = global.processingNewsList.filter(
+          (id) => id !== newsID
+        );
+      }, 10000);
+    }
+    res.json({ data: news, totalNews: newsCount });
   } catch (error) {
     res.json({
       message: "Internal server error"

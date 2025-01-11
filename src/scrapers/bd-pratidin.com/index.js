@@ -110,6 +110,7 @@ const scrapeBDPratidinNews = async () => {
       await saveToCollectedNews(content);
     });
   } catch (error) {
+    console.log("error -->>", error)
   }
 };
 
