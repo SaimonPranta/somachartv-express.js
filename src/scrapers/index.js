@@ -27,7 +27,7 @@ const startScrape = async () => {
     await scrapeBDPratidinNews();
     await scrapeAmarsangbadNews();
     await scrapeIttefaqNews();
-    await scrapeDailynayadigantaNews();
+    // await scrapeDailynayadigantaNews();
 
     console.log("End scrape ==>>", getFullDate());
     await waitHere();
