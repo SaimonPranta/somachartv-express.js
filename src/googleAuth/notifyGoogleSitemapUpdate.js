@@ -1,5 +1,7 @@
 const { google } = require("googleapis");
 const googleCrawlerSecrets = require("../shared/constants/googleCrawlerSecrets");
+const isProduction = require("../shared/functions/isProduction");
+const isRemoteDbUri = require("../shared/functions/isRemoteDbUri");
 
 const choseSecret = () => {
   global.currentSecretNumber = global.currentSecretNumber || 0;
@@ -11,7 +13,7 @@ const choseSecret = () => {
 
 // Authenticate for Search Console API
 const authenticateSearchConsole = async () => {
-  try { 
+  try {
     const secretPosition = choseSecret();
     console.log("Using secretPosition:", secretPosition);
     const auth = new google.auth.GoogleAuth({
@@ -19,7 +21,6 @@ const authenticateSearchConsole = async () => {
       // credentials: googleCrawlerSecrets[10],
       scopes: ["https://www.googleapis.com/auth/webmasters"]
     });
-
 
     const authClient = await auth.getClient();
     return google.webmasters({
@@ -32,8 +33,13 @@ const authenticateSearchConsole = async () => {
   }
 };
 
-
 const notifyGoogleSitemapUpdate = async (sitemapPath) => {
+  if (!isProduction()) {
+    return;
+  }
+  if (!isRemoteDbUri()) {
+    return;
+  }
   if (!sitemapPath) {
     return;
   }
@@ -65,5 +71,4 @@ const listSites = async () => {
 };
 //   listSites();
 
-
-module.exports = notifyGoogleSitemapUpdate
+module.exports = notifyGoogleSitemapUpdate;

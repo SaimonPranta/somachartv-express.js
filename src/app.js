@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
+const isProduction = require("./shared/functions/isProduction");
 require("./DB/connections")
 require("./scrapers/index")
 require("./schedules/index")
@@ -29,5 +30,6 @@ app.use("/chrome-extension", require("./routes/chrome-extension"))
 app.use("/backup", require("./routes/backup/index"))
 
 app.listen(PORT, () => {
-    console.log(`Server is running on PORT:${PORT}`)
+    console.log(`Server is running in ${isProduction() ? "Production" : "Development"} mode on PORT: ${PORT}`);
+
 })

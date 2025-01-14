@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const { DB_URI } = require("../shared/constants/variables");
+const isRemoteDbUri = require("../shared/functions/isRemoteDbUri");
 dotenv.config();
-
-const URI = `mongodb+srv://saimonpranta:${process.env.DB_PASSWORD}@somacharcluster.vn9e3.mongodb.net/somachar?retryWrites=true&w=majority`;
-// const URI = "mongodb://localhost:27017/somachar"
+ 
 mongoose.set("strictQuery", false);
-mongoose.connect(URI).then((success) => {
-  console.log("successfully connected with database.");
+mongoose.connect(DB_URI).then((success) => {
+  console.log(`successfully connected with ${isRemoteDbUri() ? "Remote" : "Local"} database.`);
 });

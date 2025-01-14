@@ -3,6 +3,8 @@ const path = require("path");
 const NewsCollection = require("../DB/Modals/news");
 const googleCrawlerSecrets = require("../shared/constants/googleCrawlerSecrets");
 const notifyGoogleSitemapUpdate = require("./notifyGoogleSitemapUpdate");
+const isProduction = require("../shared/functions/isProduction");
+const isRemoteDbUri = require("../shared/functions/isRemoteDbUri");
 
 const choseSecret = () => {
   global.currentSecretNumber = global.currentSecretNumber || 0;
@@ -32,6 +34,13 @@ const authenticate = async () => {
 };
 
 const notifyGoogleCrawlRequest = async (url, type = "URL_UPDATED") => {
+  if (!isProduction()) {
+    return;
+  }
+  if (!isRemoteDbUri()) {
+    return;
+  }
+
   await notifyGoogleSitemapUpdate("sitemap.xml");
   await notifyGoogleSitemapUpdate("image-sitemap.xml");
 

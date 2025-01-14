@@ -1,9 +1,11 @@
+const isProduction = require("../shared/functions/isProduction");
+const {getFullDate} = require("../shared/functions/formatDate");
 const scrapeProthomAlo = require("./prothomAlo.com/latestNewsPage");
 const scrapeBD24LiveNews = require("./bd24live.com/index");
 const scrapeBDPratidinNews = require("./bd-pratidin.com/index");
 const scrapeAmarsangbadNews = require("./amarsangbad.com/index");
 const scrapeIttefaqNews = require("./ittefaq.com.bd/index");
-// const scrapeKalerkanthoNews = require("./kalerkantho.com");
+const scrapeDailynayadigantaNews = require("./dailynayadiganta.com");
 
 const waitHere = () => {
   let intervalTime = 15 * 60 * 1000; // 15 minutes
@@ -17,14 +19,17 @@ const waitHere = () => {
 
 const startScrape = async () => {
   try {
-    console.log("Start scrape ==>>", new Date());
-    // await scrapeProthomAlo();
+    if (!isProduction()) {
+      return;
+    }
+    console.log("Start scrape ==>>", getFullDate());
     await scrapeBD24LiveNews();
     await scrapeBDPratidinNews();
     await scrapeAmarsangbadNews();
     await scrapeIttefaqNews();
+    await scrapeDailynayadigantaNews();
 
-    console.log("End scrape ==>>", new Date());
+    console.log("End scrape ==>>", getFullDate());
     await waitHere();
 
     await startScrape();
