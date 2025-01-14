@@ -88,6 +88,13 @@ const getNewsDetails = async (info) => {
       subCategory: subCategory,
       sourceUrl: info.link
     };
+    const staticImgPath = "https://www.dailynayadiganta.com/resources/img/sitesetup/1_1.png"
+    const isStaticImage = images.some((imgInfo) => imgInfo.src ===  staticImgPath)
+
+    if (isStaticImage) {
+      return null
+    }
+
     return articles;
   } catch (error) {
     return null;
@@ -132,6 +139,5 @@ const scrapeDailynayadigantaNews = async () => {
     });
   } catch (error) {}
 };
-
 
 module.exports = scrapeDailynayadigantaNews;
