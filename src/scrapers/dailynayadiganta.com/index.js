@@ -110,8 +110,6 @@ const scrapeDailynayadigantaNews = async () => {
         newsLinks.push({ link });
       }
     });
-    console.log("newsLinks 1--->>>>", newsLinks.length)
-
     newsLinks = await Promise.all(
       newsLinks.map(async (link) => {
         try {

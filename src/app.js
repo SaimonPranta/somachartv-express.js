@@ -2,10 +2,15 @@ const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
+const dotenv = require("dotenv");
 const isProduction = require("./shared/functions/isProduction");
+
 require("./DB/connections")
 require("./scrapers/index")
 require("./schedules/index")
+
+dotenv.config();
+
 const app = express()
 const PORT = 8001 || precess.env.PORT
 

@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const { DB_URI } = require("../shared/constants/variables");
 const isRemoteDbUri = require("../shared/functions/isRemoteDbUri");
-dotenv.config();
+// const dotenv = require("dotenv");
+// dotenv.config();
  
 mongoose.set("strictQuery", false);
 mongoose.connect(DB_URI).then((success) => {
