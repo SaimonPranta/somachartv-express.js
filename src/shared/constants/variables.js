@@ -1,9 +1,11 @@
 const path = require("path");
+const dotenv = require("dotenv");
 const isProduction = require("../functions/isProduction");
 const storageRootPath = path.join(
   __dirname,
   "../../../../../storage.imp/somachartv.com"
 );
+dotenv.config();
 
 const newsStoragePath = path.join(storageRootPath, "/news");
 const adsStoragePath = path.join(storageRootPath, "/ads");
