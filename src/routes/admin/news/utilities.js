@@ -5,7 +5,7 @@ const getRandomWord = require("../../../shared/utilize/getRandomWord");
 const { newsStoragePath } = require("../../../shared/constants/variables");
 
 const getQueries = (reqQuery = {}) => {
-  const { search } = reqQuery;
+  const { search, fromDate, toDate} = reqQuery;
   let query = {};
   if (search) {
     const queryArray = [
@@ -48,6 +48,20 @@ const getQueries = (reqQuery = {}) => {
     } else {
       query["$or"] = [...queryArray];
     }
+  }
+  if (fromDate && toDate) {
+    const startDate = new Date(fromDate);
+    const endDate = new Date(toDate);
+    const startOfDay = new Date(startDate.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(endDate.setHours(23, 59, 59, 999));
+    query["$and"] = [
+      {
+        createdAt: { $lte: endOfDay },
+      },
+      {
+        createdAt: { $gte: startOfDay },
+      },
+    ];
   }
 
   return query;

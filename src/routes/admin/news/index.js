@@ -66,6 +66,47 @@ router.get("/", async (req, res) => {
     });
   }
 });
+router.post("/all-news", async (req, res) => {
+  try {
+    const limit = 40;
+    const page = Number(req.query.page || 1) -1; 
+    const id = req.query.id;
+    const query = getQueries(req.body);
+    const totalNews = await NewsCollection.countDocuments({...query});
+    const skip = limit * page 
+    if (skip > totalNews) {
+     return res.json({
+        data: [],
+        page: page + 1,
+        total: totalNews
+      });
+    }
+
+    let newList = [];
+
+    if (id) {
+      newList = await NewsCollection.findOne({ _id: id });
+    } else {
+      newList = await NewsCollection.find({...query})
+        .sort({
+          createdAt: -1
+        })
+        .skip(skip)
+        .limit(limit)
+    }
+    console.log("newList --->>", newList.length)
+
+    res.json({
+      data: newList,
+      page: page + 1,
+      total: totalNews
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error"
+    });
+  }
+});
 
 router.post("/", async (req, res) => {
   try {
