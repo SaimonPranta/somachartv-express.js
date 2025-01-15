@@ -12,66 +12,57 @@ router.get("/total", async (req, res) => {
   try {
     const newsCount = {
       total: 0,
-      today: 0,
+      today: 0
     };
     const today = new Date();
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
     let endOfDay = new Date(today.setHours(23, 59, 59, 999));
     newsCount.total = await NewsCollection.countDocuments();
     newsCount.today = await NewsCollection.countDocuments({
-      createdAt: { $gte: startOfDay, $lte: endOfDay },
-  });
+      createdAt: { $gte: startOfDay, $lte: endOfDay }
+    });
     res.json({
-      data: newsCount,
+      data: newsCount
     });
   } catch (error) {
-    console.log("error ==>", error)
+    console.log("error ==>", error);
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
 router.get("/", async (req, res) => {
   try {
-    const limit = 24;
-    const page = req.query.page || 1;
-    const search = req.query.search;
+    const limit = 2;
+    const page = Number(req.query.page || 1) -1; 
     const id = req.query.id;
-    const query = getQueries(search);
-    const totalNews = await NewsCollection.countDocuments();
-    let newsSlice = totalNews / limit;
-    if (newsSlice.toString().includes(".")) {
-      const [beforeDot, afterDot] = newsSlice.toString().split(".");
-      if (Number(afterDot) > 0) {
-        newsSlice = Number(beforeDot) + 1;
-      }
-    }
-
-    if (newsSlice < page) {
+    const query = getQueries(req.query);
+    const totalNews = await NewsCollection.countDocuments({...query});
+    const skip = limit * page
+    if (skip > totalNews) {
       return res.json({
-        message: "All news are already loaded",
+        message: "All news are already loaded"
       });
     }
-    const skip = (newsSlice - page) * limit;
 
     let newList = [];
 
     if (id) {
       newList = await NewsCollection.findOne({ _id: id });
-    } else if (search) {
-      newList = await NewsCollection.find(query).limit(limit);
     } else {
-      newList = (
-        await NewsCollection.find({}).skip(skip).limit(limit)
-      ).reverse();
+      newList = await NewsCollection.find({...query})
+        .sort({
+          createdAt: -1
+        })
+        .skip(skip)
+        .limit(limit)
     }
-
     res.json({
-      data: newList,
+      data: newList
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -92,7 +83,7 @@ router.post("/", async (req, res) => {
     ) {
       return res.json({
         message:
-          "Title, Category, HTML Description and Image field are required",
+          "Title, Category, HTML Description and Image field are required"
       });
     }
     images = await images.map((fileInfo, index) => {
@@ -109,7 +100,7 @@ router.post("/", async (req, res) => {
       return {
         ...fileInfo,
         src: fileName,
-        file: file,
+        file: file
       };
     });
     const document = await getDocument(htmlDescription);
@@ -125,7 +116,7 @@ router.post("/", async (req, res) => {
     const updateInfo = {
       ...data,
       description,
-      images,
+      images
     };
     const newsInfo = await new NewsCollection({ ...updateInfo });
 
@@ -134,7 +125,7 @@ router.post("/", async (req, res) => {
     if (!updateNews) {
       return res.json({
         success: false,
-        message: "Failed to create a news",
+        message: "Failed to create a news"
       });
     }
     if (!fs.existsSync(newsStoragePath)) {
@@ -159,8 +150,8 @@ router.post("/", async (req, res) => {
         {
           googleIndexInfo: {
             indexed: true,
-            date: new Date(),
-          },
+            date: new Date()
+          }
         }
       );
     }
@@ -168,11 +159,11 @@ router.post("/", async (req, res) => {
     res.json({
       success: true,
       data: updateNews,
-      message: "Categories updated successfully",
+      message: "Categories updated successfully"
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -194,14 +185,14 @@ router.put("/", async (req, res) => {
     ) {
       return res.json({
         message:
-          "Title, Category, HTML Description and Image field are required",
+          "Title, Category, HTML Description and Image field are required"
       });
     }
 
     const news = await NewsCollection.findOne({ _id: newsID });
     if (!news) {
       return res.json({
-        message: "Failed to update, news not found",
+        message: "Failed to update, news not found"
       });
     }
     images = await images.map((fileInfo, index) => {
@@ -219,7 +210,7 @@ router.put("/", async (req, res) => {
       }
 
       return {
-        ...fileInfo,
+        ...fileInfo
         // src: fileName,
         // file: file,
       };
@@ -237,7 +228,7 @@ router.put("/", async (req, res) => {
     const updateInfo = {
       ...data,
       description,
-      images,
+      images
     };
     const updateNews = await NewsCollection.findOneAndUpdate(
       { _id: newsID },
@@ -248,7 +239,7 @@ router.put("/", async (req, res) => {
     if (!updateNews) {
       return res.json({
         success: false,
-        message: "Failed to update a news",
+        message: "Failed to update a news"
       });
     }
     if (!fs.existsSync(newsStoragePath)) {
@@ -287,11 +278,11 @@ router.put("/", async (req, res) => {
     res.json({
       success: true,
       data: updateNews,
-      message: "Categories updated successfully",
+      message: "Categories updated successfully"
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -310,12 +301,12 @@ router.delete("/", async (req, res) => {
       })
     );
     res.json({
-      data: true,
+      data: true
     });
   } catch (error) {
     res.json({
       success: false,
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
