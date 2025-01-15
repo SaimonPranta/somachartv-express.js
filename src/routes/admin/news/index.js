@@ -33,7 +33,7 @@ router.get("/total", async (req, res) => {
 });
 router.get("/", async (req, res) => {
   try {
-    const limit = 2;
+    const limit = 40;
     const page = Number(req.query.page || 1) -1; 
     const id = req.query.id;
     const query = getQueries(req.query);
