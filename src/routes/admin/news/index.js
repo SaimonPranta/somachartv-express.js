@@ -67,10 +67,11 @@ router.get("/", async (req, res) => {
 });
 router.post("/all-news", async (req, res) => {
   try {
+    let viewCount = 0;
     const limit = 40;
     const page = Number(req.query.page || 1) - 1;
     const id = req.query.id;
-    const { sortByDate, sortByView} = req.body;
+    const { sortByDate, sortByView } = req.body;
     const query = getQueries(req.body);
     let sort = {};
     if (sortByDate) {
@@ -88,12 +89,29 @@ router.post("/all-news", async (req, res) => {
       }
     }
     const totalNews = await NewsCollection.countDocuments({ ...query });
+    const viewCountList = await NewsCollection.aggregate([
+      {
+        $match: { ...query }
+      },
+      {
+        $group: {
+          _id: null,
+          totalViews: {
+            $sum: "$viewCount"
+          }
+        }
+      }
+    ]);
+    if (viewCountList.length) {
+      viewCount = viewCountList[0].totalViews || 0;
+    }
     const skip = limit * page;
     if (skip > totalNews) {
       return res.json({
         data: [],
         page: page + 1,
-        total: totalNews
+        total: totalNews,
+        viewCount: viewCount
       });
     }
 
@@ -105,7 +123,8 @@ router.post("/all-news", async (req, res) => {
     res.json({
       data: newList,
       page: page + 1,
-      total: totalNews
+      total: totalNews,
+      viewCount: viewCount
     });
   } catch (error) {
     res.json({
