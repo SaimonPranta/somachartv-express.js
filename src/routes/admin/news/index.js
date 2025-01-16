@@ -25,7 +25,6 @@ router.get("/total", async (req, res) => {
       data: newsCount
     });
   } catch (error) {
-    console.log("error ==>", error);
     res.json({
       message: "Internal server error"
     });
@@ -34,11 +33,11 @@ router.get("/total", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const limit = 40;
-    const page = Number(req.query.page || 1) -1; 
+    const page = Number(req.query.page || 1) - 1;
     const id = req.query.id;
     const query = getQueries(req.query);
-    const totalNews = await NewsCollection.countDocuments({...query});
-    const skip = limit * page
+    const totalNews = await NewsCollection.countDocuments({ ...query });
+    const skip = limit * page;
     if (skip > totalNews) {
       return res.json({
         message: "All news are already loaded"
@@ -50,12 +49,12 @@ router.get("/", async (req, res) => {
     if (id) {
       newList = await NewsCollection.findOne({ _id: id });
     } else {
-      newList = await NewsCollection.find({...query})
+      newList = await NewsCollection.find({ ...query })
         .sort({
           createdAt: -1
         })
         .skip(skip)
-        .limit(limit)
+        .limit(limit);
     }
     res.json({
       data: newList
@@ -69,32 +68,39 @@ router.get("/", async (req, res) => {
 router.post("/all-news", async (req, res) => {
   try {
     const limit = 40;
-    const page = Number(req.query.page || 1) -1; 
+    const page = Number(req.query.page || 1) - 1;
     const id = req.query.id;
+    const { sortByDate, sortByView} = req.body;
     const query = getQueries(req.body);
-    const totalNews = await NewsCollection.countDocuments({...query});
-    const skip = limit * page 
+    let sort = {};
+    if (sortByDate) {
+      if (sortByDate === "Old") {
+        sort["createdAt"] = 1;
+      } else {
+        sort["createdAt"] = -1;
+      }
+    }
+    if (sortByView) {
+      if (sortByView === "Less") {
+        sort["viewCount"] = 1;
+      } else {
+        sort["viewCount"] = -1;
+      }
+    }
+    const totalNews = await NewsCollection.countDocuments({ ...query });
+    const skip = limit * page;
     if (skip > totalNews) {
-     return res.json({
+      return res.json({
         data: [],
         page: page + 1,
         total: totalNews
       });
     }
 
-    let newList = [];
-
-    if (id) {
-      newList = await NewsCollection.findOne({ _id: id });
-    } else {
-      newList = await NewsCollection.find({...query})
-        .sort({
-          createdAt: -1
-        })
-        .skip(skip)
-        .limit(limit)
-    }
-    console.log("newList --->>", newList.length)
+    let newList = await NewsCollection.find({ ...query })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit);
 
     res.json({
       data: newList,
