@@ -1,5 +1,6 @@
 const isProduction = () => {
-  return process.env.npm_lifecycle_event !== "dev";
+  const developmentCommands = ["dev", "remote-dev"];
+  return !developmentCommands.includes(process.env.npm_lifecycle_event);
 };
- 
+
 module.exports = isProduction;
