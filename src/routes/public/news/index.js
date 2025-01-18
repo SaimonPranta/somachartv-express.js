@@ -7,8 +7,6 @@ const { createImgFrame } = require("./helper/utilitize");
 const getHotNews = require("./helper/functions/getHotNews");
 const CategoriesGroupCollection = require("../../../DB/Modals/categoryGroup");
 
-
-
 router.get("/sitemap", async (req, res) => {
   try {
     const news = await NewsCollection.find()
@@ -17,19 +15,20 @@ router.get("/sitemap", async (req, res) => {
 
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
 router.get("/", async (req, res) => {
   try {
-    const { category, subcategory, categoryGroup, search, sort } =
-      req.query; 
-    const categoryGroupInfo =  await CategoriesGroupCollection.findOne({groupName: categoryGroup })
+    const { category, subcategory, categoryGroup, search, sort } = req.query;
+    const categoryGroupInfo = await CategoriesGroupCollection.findOne({
+      groupName: categoryGroup
+    });
     const limit = Number(req.query.limit) || 20;
     const query = {};
     let orQuery = [];
@@ -42,17 +41,21 @@ router.get("/", async (req, res) => {
     if (search && search !== "undefined") {
       const searchQuery = [
         { title: new RegExp(search, "i") },
-        { description: new RegExp(search, "i") },
+        { description: new RegExp(search, "i") }
       ];
       orQuery = [...orQuery, ...searchQuery];
-    } 
-    if (categoryGroupInfo && categoryGroupInfo.categories && categoryGroupInfo.categories.length) {
+    }
+    if (
+      categoryGroupInfo &&
+      categoryGroupInfo.categories &&
+      categoryGroupInfo.categories.length
+    ) {
       await categoryGroupInfo.categories.forEach((currentCategory) => {
         orQuery.push({ "category.label": currentCategory.label });
         orQuery.push({ "category.route": currentCategory.route });
       });
     }
-    
+
     if (orQuery.length) {
       query["$or"] = orQuery;
     }
@@ -61,11 +64,11 @@ router.get("/", async (req, res) => {
       .sort({ createdAt: -1 });
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -83,7 +86,7 @@ router.get("/sort", async (req, res) => {
 
     if (skip >= totalNews) {
       return res.json({
-        message: "All news are already loaded",
+        message: "All news are already loaded"
       });
     }
 
@@ -104,11 +107,11 @@ router.get("/sort", async (req, res) => {
     res.json({
       data: newList,
       page: page,
-      total: totalNews,
+      total: totalNews
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -117,15 +120,79 @@ router.get("/today-hot-news", async (req, res) => {
     const currentTime = new Date();
     let newList = await getHotNews(currentTime);
     res.json({
-      data: newList,
+      data: newList
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
+router.post("/category-news", async (req, res) => {
+  try {
+    const { category, subcategory, categoryGroup, search } = req.body;
+    const categoryGroupInfo = await CategoriesGroupCollection.findOne({
+      groupName: categoryGroup
+    });
+    const limit = Number(req.query.limit || 40);
+    const page = Number(req.query.page || 1) - 1;
+    let sort = {
+      createdAt: -1
+    };
+    let query = {};
+    let orQuery = [];
+    if (category && category !== "undefined") {
+      query["category.label"] = category;
+    }
+    if (subcategory && subcategory !== "undefined") {
+      query["subcategory.label"] = subcategory;
+    }
+    if (search && search !== "undefined") {
+      const searchQuery = [
+        { title: new RegExp(search, "i") },
+        { description: new RegExp(search, "i") }
+      ];
+      orQuery = [...orQuery, ...searchQuery];
+    }
+    if (
+      categoryGroupInfo &&
+      categoryGroupInfo.categories &&
+      categoryGroupInfo.categories.length
+    ) {
+      await categoryGroupInfo.categories.forEach((currentCategory) => {
+        orQuery.push({ "category.label": currentCategory.label });
+        orQuery.push({ "category.route": currentCategory.route });
+      });
+    }
 
+    if (orQuery.length) {
+      query["$or"] = orQuery;
+    } 
+
+    const totalNews = await NewsCollection.countDocuments({ ...query });
+    const skip = limit * page;
+    if (skip > totalNews) {
+      return res.json({
+        data: [],
+        page: page + 1,
+        total: totalNews, 
+      });
+    } 
+    let newList = await NewsCollection.find({ ...query })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit) 
+    res.json({
+      data: newList,
+      page: page + 1,
+      total: totalNews
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error"
+    });
+  }
+});
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -172,11 +239,11 @@ router.get("/:id", async (req, res) => {
     }
     res.json({
       success: true,
-      data: news,
+      data: news
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });

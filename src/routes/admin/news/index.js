@@ -4,9 +4,10 @@ const NewsCollection = require("../../../DB/Modals/news");
 const path = require("path");
 const { newsStoragePath } = require("../../../shared/constants/variables");
 const fs = require("fs");
-const { getQueries, setFileName } = require("./utilities");
+const {   setFileName } = require("./utilities");
 const getDocument = require("../../../shared/utilize/getDocument");
 const notifyGoogleCrawlRequest = require("../../../googleAuth/notifyGoogleCrawlRequest");
+const { getNewsOrQueries } = require("../../../shared/utilize/getNewQueries");
 
 router.get("/total", async (req, res) => {
   try {
@@ -35,7 +36,7 @@ router.get("/", async (req, res) => {
     const limit = 40;
     const page = Number(req.query.page || 1) - 1;
     const id = req.query.id;
-    const query = getQueries(req.query);
+    const query = getNewsOrQueries(req.query);
     const totalNews = await NewsCollection.countDocuments({ ...query });
     const skip = limit * page;
     if (skip > totalNews) {
@@ -72,7 +73,7 @@ router.post("/all-news", async (req, res) => {
     const page = Number(req.query.page || 1) - 1;
     const id = req.query.id;
     const { sortByDate, sortByView } = req.body;
-    const query = getQueries(req.body);
+    const query = getNewsOrQueries(req.body);
     let sort = {};
     if (sortByDate) {
       if (sortByDate === "Old") {
