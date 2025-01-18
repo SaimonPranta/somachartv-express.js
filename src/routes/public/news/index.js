@@ -6,6 +6,7 @@ const { JSDOM } = require("jsdom");
 const { createImgFrame } = require("./helper/utilitize");
 const getHotNews = require("./helper/functions/getHotNews");
 const CategoriesGroupCollection = require("../../../DB/Modals/categoryGroup");
+const { getNewsOrQueries } = require("../../../shared/utilize/getNewQueries");
 
 router.get("/sitemap", async (req, res) => {
   try {
@@ -23,48 +24,32 @@ router.get("/sitemap", async (req, res) => {
     });
   }
 });
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const { category, subcategory, categoryGroup, search, sort } = req.query;
-    const categoryGroupInfo = await CategoriesGroupCollection.findOne({
-      groupName: categoryGroup
-    });
-    const limit = Number(req.query.limit) || 20;
-    const query = {};
-    let orQuery = [];
-    if (category && category !== "undefined") {
-      query["category.label"] = category;
-    }
-    if (subcategory && subcategory !== "undefined") {
-      query["subcategory.label"] = subcategory;
-    }
-    if (search && search !== "undefined") {
-      const searchQuery = [
-        { title: new RegExp(search, "i") },
-        { description: new RegExp(search, "i") }
-      ];
-      orQuery = [...orQuery, ...searchQuery];
-    }
-    if (
-      categoryGroupInfo &&
-      categoryGroupInfo.categories &&
-      categoryGroupInfo.categories.length
-    ) {
-      await categoryGroupInfo.categories.forEach((currentCategory) => {
-        orQuery.push({ "category.label": currentCategory.label });
-        orQuery.push({ "category.route": currentCategory.route });
-      });
-    }
+    const limit = Number(req.query.limit || 40);
+    const page = Number(req.query.page || 1) - 1;
+    let sort = {
+      createdAt: -1
+    };
+    let query = await getNewsOrQueries(req.body)
 
-    if (orQuery.length) {
-      query["$or"] = orQuery;
-    }
-    const news = await NewsCollection.find({ ...query })
-      .limit(limit)
-      .sort({ createdAt: -1 });
+    const totalNews = await NewsCollection.countDocuments({ ...query });
+    const skip = limit * page;
+    if (skip > totalNews) {
+      return res.json({
+        data: [],
+        page: page + 1,
+        total: totalNews, 
+      });
+    } 
+    let newList = await NewsCollection.find({ ...query })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit) 
     res.json({
-      success: true,
-      data: news
+      data: newList,
+      page: page + 1,
+      total: totalNews
     });
   } catch (error) {
     res.json({
@@ -128,70 +113,7 @@ router.get("/today-hot-news", async (req, res) => {
     });
   }
 });
-router.post("/category-news", async (req, res) => {
-  try {
-    const { category, subcategory, categoryGroup, search } = req.body;
-    const categoryGroupInfo = await CategoriesGroupCollection.findOne({
-      groupName: categoryGroup
-    });
-    const limit = Number(req.query.limit || 40);
-    const page = Number(req.query.page || 1) - 1;
-    let sort = {
-      createdAt: -1
-    };
-    let query = {};
-    let orQuery = [];
-    if (category && category !== "undefined") {
-      query["category.label"] = category;
-    }
-    if (subcategory && subcategory !== "undefined") {
-      query["subcategory.label"] = subcategory;
-    }
-    if (search && search !== "undefined") {
-      const searchQuery = [
-        { title: new RegExp(search, "i") },
-        { description: new RegExp(search, "i") }
-      ];
-      orQuery = [...orQuery, ...searchQuery];
-    }
-    if (
-      categoryGroupInfo &&
-      categoryGroupInfo.categories &&
-      categoryGroupInfo.categories.length
-    ) {
-      await categoryGroupInfo.categories.forEach((currentCategory) => {
-        orQuery.push({ "category.label": currentCategory.label });
-        orQuery.push({ "category.route": currentCategory.route });
-      });
-    }
 
-    if (orQuery.length) {
-      query["$or"] = orQuery;
-    } 
-    const totalNews = await NewsCollection.countDocuments({ ...query });
-    const skip = limit * page;
-    if (skip > totalNews) {
-      return res.json({
-        data: [],
-        page: page + 1,
-        total: totalNews, 
-      });
-    } 
-    let newList = await NewsCollection.find({ ...query })
-      .sort(sort)
-      .skip(skip)
-      .limit(limit) 
-    res.json({
-      data: newList,
-      page: page + 1,
-      total: totalNews
-    });
-  } catch (error) {
-    res.json({
-      message: "Internal server error"
-    });
-  }
-});
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;

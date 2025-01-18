@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
     const limit = 40;
     const page = Number(req.query.page || 1) - 1;
     const id = req.query.id;
-    const query = getNewsOrQueries(req.query);
+    const query = await getNewsOrQueries(req.query);
     const totalNews = await NewsCollection.countDocuments({ ...query });
     const skip = limit * page;
     if (skip > totalNews) {
@@ -73,7 +73,7 @@ router.post("/all-news", async (req, res) => {
     const page = Number(req.query.page || 1) - 1;
     const id = req.query.id;
     const { sortByDate, sortByView } = req.body;
-    const query = getNewsOrQueries(req.body);
+    const query = await getNewsOrQueries(req.body);
     let sort = {};
     if (sortByDate) {
       if (sortByDate === "Old") {
