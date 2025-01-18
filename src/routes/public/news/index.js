@@ -168,7 +168,6 @@ router.post("/category-news", async (req, res) => {
     if (orQuery.length) {
       query["$or"] = orQuery;
     } 
-
     const totalNews = await NewsCollection.countDocuments({ ...query });
     const skip = limit * page;
     if (skip > totalNews) {
