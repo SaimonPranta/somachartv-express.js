@@ -12,7 +12,6 @@ router.get("/sitemap", async (req, res) => {
   try {
     const news = await NewsCollection.find()
       .sort({ createdAt: -1 })
-      .limit(5)
       .select("_id title category createdAt subcategory images updatedAt");
 
     res.json({
@@ -32,7 +31,7 @@ router.post("/", async (req, res) => {
     let sort = {
       createdAt: -1
     };
-    let query = await getNewsOrQueries(req.body)
+    let query = await getNewsOrQueries(req.body);
 
     const totalNews = await NewsCollection.countDocuments({ ...query });
     const skip = limit * page;
@@ -40,13 +39,13 @@ router.post("/", async (req, res) => {
       return res.json({
         data: [],
         page: page + 1,
-        total: totalNews, 
+        total: totalNews
       });
-    } 
+    }
     let newList = await NewsCollection.find({ ...query })
       .sort(sort)
       .skip(skip)
-      .limit(limit) 
+      .limit(limit);
     res.json({
       data: newList,
       page: page + 1,
