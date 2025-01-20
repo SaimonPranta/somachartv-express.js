@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const CategoriesCollection = require("../../../DB/Modals/categories");
 const CategoriesGroupCollection = require("../../../DB/Modals/categoryGroup");
+const CategoriesMapCollection = require("../../../DB/Modals/categoryMap");
 
 router.get("/", async (req, res) => {
   try {
@@ -8,11 +9,11 @@ router.get("/", async (req, res) => {
     res.json({
       success: true,
       data: categoriesList,
-      message: "Categories updated successfully",
+      message: "Categories updated successfully"
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -27,7 +28,7 @@ router.post("/", async (req, res) => {
       updateCategories = await CategoriesCollection.findOneAndUpdate(
         { _id: data.categoriesID },
         {
-          $push: { subCategories: { $each: [data] } },
+          $push: { subCategories: { $each: [data] } }
         },
         { new: true }
       );
@@ -38,7 +39,7 @@ router.post("/", async (req, res) => {
       if (!updateCategories) {
         return res.json({
           success: false,
-          message: "Failed to update categories",
+          message: "Failed to update categories"
         });
       }
     }
@@ -46,11 +47,11 @@ router.post("/", async (req, res) => {
     res.json({
       success: true,
       data: updateCategories,
-      message: "Categories updated successfully",
+      message: "Categories updated successfully"
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -61,12 +62,12 @@ router.delete("/", async (req, res) => {
     const users = await CategoriesCollection.find();
     res.json({
       success: false,
-      data: users,
+      data: users
     });
   } catch (error) {
     res.json({
       success: false,
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -77,20 +78,20 @@ router.delete("/subcategories", async (req, res) => {
       { _id: mainID },
       {
         $pull: {
-          subCategories: { _id: subID },
-        },
+          subCategories: { _id: subID }
+        }
       },
       { new: true }
     );
     const users = await CategoriesCollection.find();
     res.json({
       success: false,
-      data: users,
+      data: users
     });
   } catch (error) {
     res.json({
       success: false,
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -104,17 +105,17 @@ router.post("/group", async (req, res) => {
       updateCategories = await CategoriesGroupCollection.findOneAndUpdate(
         { _id: data._id },
         {
-          ...data,
+          ...data
         },
         { new: true }
       );
     } else {
       const isExist = await CategoriesGroupCollection.findOne({
-        groupName: data.groupName,
+        groupName: data.groupName
       });
       if (isExist) {
         return res.json({
-          message: "This group name are already exist, try another one",
+          message: "This group name are already exist, try another one"
         });
       }
       const categories = await new CategoriesGroupCollection({ ...data });
@@ -125,11 +126,11 @@ router.post("/group", async (req, res) => {
     res.json({
       success: true,
       data: updateCategories,
-      message: "Categories updated successfully",
+      message: "Categories updated successfully"
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -139,11 +140,11 @@ router.get("/group", async (req, res) => {
     res.json({
       success: true,
       data: categoriesList,
-      message: "Categories updated successfully",
+      message: "Categories updated successfully"
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
@@ -154,28 +155,122 @@ router.delete("/group", async (req, res) => {
     const list = await CategoriesGroupCollection.find();
     res.json({
       success: false,
-      data: list,
+      data: list
     });
   } catch (error) {
     res.json({
       success: false,
-      message: "Internal server error",
+      message: "Internal server error"
     });
   }
 });
 router.get("/group/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('id ==>>', id)
+    console.log("id ==>>", id);
     const categoryInfo = await CategoriesGroupCollection.findOne({ _id: id });
     res.json({
       success: true,
       data: categoryInfo,
-      message: "Get Category group successfully",
+      message: "Get Category group successfully"
     });
   } catch (error) {
     res.json({
-      message: "Internal server error",
+      message: "Internal server error"
+    });
+  }
+});
+
+router.get("/map", async (req, res) => {
+  try {
+    const categoriesList = await CategoriesMapCollection.find();
+    res.json({
+      success: true,
+      data: categoriesList,
+      message: "Category map updated successfully"
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error"
+    });
+  }
+});
+router.post("/map", async (req, res) => {
+  try {
+    const data = req.body;
+
+    let updateCategories = null;
+
+    if (data._id) {
+      updateCategories = await CategoriesMapCollection.findOneAndUpdate(
+        { _id: data._id },
+        {
+          ...data
+        },
+        { new: true }
+      );
+    } else {
+      const isExist = await CategoriesMapCollection.findOne({
+        $or: [
+          {
+            mapName: data.mapName
+          },
+          {
+            mapRoute: data.mapRoute
+          }
+        ]
+      });
+      if (isExist) {
+        return res.json({
+          message: "This group name are already exist, try another one"
+        });
+      }
+      const categories = await new CategoriesMapCollection({ ...data });
+      updateCategories = await categories.save();
+    }
+    console.log("updateCategories ===>>", updateCategories);
+
+    res.json({
+      success: true,
+      data: updateCategories,
+      message: "Categories updated successfully"
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error"
+    });
+  }
+});
+
+router.delete("/map", async (req, res) => {
+  try {
+    const { id } = req.body;
+    await CategoriesMapCollection.findOneAndDelete({ _id: id });
+    const list = await CategoriesMapCollection.find();
+    res.json({
+      success: false,
+      data: list
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+});
+router.get("/map/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("id ==>>", id);
+    const categoryInfo = await CategoriesMapCollection.findOne({ _id: id });
+    res.json({
+      success: true,
+      data: categoryInfo,
+      message: "Get Category group successfully"
+    });
+  } catch (error) {
+    res.json({
+      message: "Internal server error"
     });
   }
 });
