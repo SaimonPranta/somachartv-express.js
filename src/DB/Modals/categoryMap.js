@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 const categoryMapSchema = new mongoose.Schema({
-  mapName: {
+  label: {
     type: String,
     required: true, 
     unique: true,
   },
-  mapRoute: {
+  route: {
     type: String,
     required: true, 
     unique: true,

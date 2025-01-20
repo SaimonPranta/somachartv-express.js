@@ -170,21 +170,4 @@ router.get("/:id", async (req, res) => {
 });
 
 module.exports = router;
-let imgArray = [1, 2, 3];
-const result = [];
-let imgIndex = 0;
 
-let des = new Array(0).fill("p");
-const imgPosition = Math.floor(des.length / imgArray.length);
-des.forEach((el, index) => {
-  const mainIndex = index + 1;
-  result.push(el);
-  // Insert an image every two "p" elements
-  if (Number(mainIndex + 1) === des.length && imgIndex < imgArray.length) {
-    result.push(imgArray[imgIndex]);
-    imgIndex++;
-  } else if (mainIndex % imgPosition === 0 && imgIndex < imgArray.length) {
-    result.push(imgArray[imgIndex]);
-    imgIndex++;
-  }
-});

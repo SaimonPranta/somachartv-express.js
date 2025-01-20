@@ -213,10 +213,10 @@ router.post("/map", async (req, res) => {
       const isExist = await CategoriesMapCollection.findOne({
         $or: [
           {
-            mapName: data.mapName
+            label: data.label
           },
           {
-            mapRoute: data.mapRoute
+            route: data.route
           }
         ]
       });
@@ -228,7 +228,6 @@ router.post("/map", async (req, res) => {
       const categories = await new CategoriesMapCollection({ ...data });
       updateCategories = await categories.save();
     }
-    console.log("updateCategories ===>>", updateCategories);
 
     res.json({
       success: true,
@@ -236,6 +235,7 @@ router.post("/map", async (req, res) => {
       message: "Categories updated successfully"
     });
   } catch (error) {
+    console.log("error ==>>", error)
     res.json({
       message: "Internal server error"
     });
@@ -261,7 +261,6 @@ router.delete("/map", async (req, res) => {
 router.get("/map/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("id ==>>", id);
     const categoryInfo = await CategoriesMapCollection.findOne({ _id: id });
     res.json({
       success: true,
