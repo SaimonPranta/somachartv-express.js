@@ -12,6 +12,7 @@ router.get("/sitemap", async (req, res) => {
   try {
     const news = await NewsCollection.find()
       .sort({ createdAt: -1 })
+      .limit(5)
       .select("_id title category createdAt subcategory images updatedAt");
 
     res.json({
