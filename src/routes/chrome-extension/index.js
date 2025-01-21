@@ -127,8 +127,11 @@ router.post("/send-news", async (req, res) => {
           },
         ],
       });
-      category = categoryMap.label;
-      categoryLabel = categoryMap.route;
+      if(categoryMap){
+        category = categoryMap.label;
+        categoryLabel = categoryMap.route;
+      }
+      
     }
     const isExist = await NewsCollection.findOne({
       $or: [
