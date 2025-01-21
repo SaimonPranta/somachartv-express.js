@@ -116,6 +116,7 @@ router.post("/send-news", async (req, res) => {
           "title, modifyTitle, modifyHtmlDescription, modifyDescription length are required",
       });
     }
+    console.log("form send new route ==>>", {category, categoryLabel})
     if (category || categoryLabel) {
       const categoryMap = await CategoriesMapCollection.findOne({
         $or: [
@@ -127,6 +128,8 @@ router.post("/send-news", async (req, res) => {
           },
         ],
       });
+    console.log("form send new route categoryMap ==>> ", categoryMap)
+
       if(categoryMap){
         category = categoryMap.label;
         categoryLabel = categoryMap.route;
