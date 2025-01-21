@@ -131,8 +131,8 @@ router.post("/send-news", async (req, res) => {
       console.log("form send new route categoryMap ==>> ", categoryMap);
 
       if (categoryMap) {
-        category = categoryMap.label;
-        categoryLabel = categoryMap.route;
+        category = categoryMap.route;
+        categoryLabel = categoryMap.label;
       }
     }
     const isExist = await NewsCollection.findOne({
