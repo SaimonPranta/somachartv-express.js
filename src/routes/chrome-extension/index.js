@@ -121,10 +121,10 @@ router.post("/send-news", async (req, res) => {
       const categoryMap = await CategoriesMapCollection.findOne({
         $or: [
           {
-            "categoryLabel.label": category,
+            "categories.label": category,
           },
           {
-            "categoryLabel.route": categoryLabel,
+            "categories.route": categoryLabel,
           },
         ],
       });
@@ -243,4 +243,6 @@ const of = (async = () => {
   } catch (error) {}
 });
 
+
+ 
 module.exports = router;
