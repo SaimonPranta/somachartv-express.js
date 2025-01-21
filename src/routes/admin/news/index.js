@@ -74,6 +74,7 @@ router.post("/all-news", async (req, res) => {
     const id = req.query.id;
     const { sortByDate, sortByView } = req.body;
     const query = await getNewsOrQueries(req.body);
+    console.log("query ===>>",query)
     let sort = {};
     if (sortByDate) {
       if (sortByDate === "Old") {
