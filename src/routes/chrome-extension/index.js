@@ -21,7 +21,7 @@ router.get("/get-collected-news", async (req, res) => {
     if (newsCount === 0) {
       return res.json({
         message: "No news found to modify",
-        totalNews: newsCount
+        totalNews: newsCount,
       });
     }
     const avoid = 21;
@@ -37,13 +37,13 @@ router.get("/get-collected-news", async (req, res) => {
 
     if (!news || !news._id) {
       return res.json({
-        message: "No news found to modify"
+        message: "No news found to modify",
       });
     }
     const newsID = news._id.toString();
     if (global.processingNewsList.includes(newsID)) {
       return res.json({
-        message: "This news already in processing"
+        message: "This news already in processing",
       });
     } else {
       global.processingNewsList.push(newsID);
@@ -56,7 +56,7 @@ router.get("/get-collected-news", async (req, res) => {
     res.json({ data: news, totalNews: newsCount });
   } catch (error) {
     res.json({
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 });
@@ -68,7 +68,7 @@ router.get("/delete-collected-news/:id", async (req, res) => {
     res.json({ data: news });
   } catch (error) {
     res.json({
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 });
@@ -88,7 +88,7 @@ router.post("/send-news", async (req, res) => {
       modifyTitle,
       modifyHtmlDescription,
       modifyDescription,
-      images
+      images,
     } = body;
     let category = categoryInfo.route;
     let categoryLabel = categoryInfo.label;
@@ -103,7 +103,7 @@ router.post("/send-news", async (req, res) => {
     ) {
       return res.json({
         message:
-          "_id, title, modifyTitle, modifyHtmlDescription, modifyDescription are required"
+          "_id, title, modifyTitle, modifyHtmlDescription, modifyDescription are required",
       });
     }
     if (
@@ -113,20 +113,25 @@ router.post("/send-news", async (req, res) => {
     ) {
       return res.json({
         message:
-          "title, modifyTitle, modifyHtmlDescription, modifyDescription length are required"
+          "title, modifyTitle, modifyHtmlDescription, modifyDescription length are required",
       });
     }
-    console.log("form send new route ==>>", { category, categoryLabel });
     if (category || categoryLabel) {
       const categoryMap = await CategoriesMapCollection.findOne({
         $or: [
           {
-            "categories.label": categoryLabel
+            label: categoryLabel,
           },
           {
-            "categories.route": category
-          }
-        ]
+            route: category,
+          },
+          {
+            "categories.label": categoryLabel,
+          },
+          {
+            "categories.route": category,
+          },
+        ],
       });
       console.log("form send new route categoryMap ==>> ", categoryMap);
 
@@ -138,18 +143,18 @@ router.post("/send-news", async (req, res) => {
     const isExist = await NewsCollection.findOne({
       $or: [
         {
-          "source.title": title
+          "source.title": title,
         },
         {
-          "source.sourceUrl": sourceUrl
-        }
-      ]
+          "source.sourceUrl": sourceUrl,
+        },
+      ],
     }).select("_id");
 
     if (isExist) {
       await CollectedNewsCollection.findOneAndDelete({ _id });
       return res.json({
-        message: "This news are already exist"
+        message: "This news are already exist",
       });
     }
 
@@ -181,12 +186,12 @@ router.post("/send-news", async (req, res) => {
         return {
           ...imgInfo,
           src: updatePath,
-          sourceSrc: src
+          sourceSrc: src,
         };
       })
     );
     updateImageList = await updateImageList.filter((imgInfo) => imgInfo);
-    await saveCategory(category, categoryLabel, subcategory, subcategoryLabel); 
+    await saveCategory(category, categoryLabel, subcategory, subcategoryLabel);
     const updateInfo = {
       title: modifyTitle,
       description: modifyDescription,
@@ -199,8 +204,8 @@ router.post("/send-news", async (req, res) => {
       images: [...updateImageList],
       source: {
         title: title,
-        sourceUrl: sourceUrl
-      }
+        sourceUrl: sourceUrl,
+      },
     };
     if (subcategoryLabel) {
       updateInfo["subcategory"] = subcategoryInfo;
@@ -227,8 +232,8 @@ router.post("/send-news", async (req, res) => {
         {
           googleIndexInfo: {
             indexed: true,
-            date: new Date()
-          }
+            date: new Date(),
+          },
         }
       );
     }
@@ -236,7 +241,7 @@ router.post("/send-news", async (req, res) => {
     res.json({ data: [] });
   } catch (error) {
     res.json({
-      message: `Server error:-> ${error.message}`
+      message: `Server error:-> ${error.message}`,
     });
   }
 });
