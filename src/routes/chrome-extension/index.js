@@ -186,12 +186,15 @@ router.post("/send-news", async (req, res) => {
       })
     );
     updateImageList = await updateImageList.filter((imgInfo) => imgInfo);
-    await saveCategory(category, categoryLabel, subcategory, subcategoryLabel);
+    await saveCategory(category, categoryLabel, subcategory, subcategoryLabel); 
     const updateInfo = {
       title: modifyTitle,
       description: modifyDescription,
       htmlDescription: modifyHtmlDescription,
-      category: categoryInfo,
+      category: {
+        label: categoryLabel,
+        route: category,
+      },
       // subcategory,
       images: [...updateImageList],
       source: {
