@@ -2,6 +2,7 @@ const router = require("express").Router();
 const CategoriesCollection = require("../../../DB/Modals/categories");
 const CategoriesGroupCollection = require("../../../DB/Modals/categoryGroup");
 const CategoriesMapCollection = require("../../../DB/Modals/categoryMap");
+const NewsCollection = require("../../../DB/Modals/news");
 
 router.get("/", async (req, res) => {
   try {
@@ -235,7 +236,7 @@ router.post("/map", async (req, res) => {
       message: "Categories updated successfully"
     });
   } catch (error) {
-    console.log("error ==>>", error)
+    console.log("error ==>>", error);
     res.json({
       message: "Internal server error"
     });
@@ -254,6 +255,64 @@ router.delete("/map", async (req, res) => {
   } catch (error) {
     res.json({
       success: false,
+      message: "Internal server error"
+    });
+  }
+});
+router.get("/map/sanitize/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    let query = {};
+    const orQuery = [];
+    let queryList = [];
+
+    const categoryInfo = await CategoriesMapCollection.findOne({ _id: id });
+    if (!categoryInfo || !categoryInfo.label || !categoryInfo.route) {
+      return res.json({
+        message: "Category group not found"
+      });
+    }
+    queryList.push({
+      label: categoryInfo.label,
+      route: categoryInfo.route
+    });
+
+    if (categoryInfo.categories && categoryInfo.categories.length) {
+      queryList = [...queryList, ...categoryInfo.categories];
+    }
+    if (queryList.length) {
+      await queryList.forEach((item) => {
+        if (item.label) {
+          orQuery.push({
+            "category.label": item.label
+          });
+        }
+        if (item.route) {
+          orQuery.push({
+            "category.route": item.route
+          });
+        }
+      });
+    }
+    query["$or"] = orQuery;
+    const updateNews = await NewsCollection.updateMany(
+      { ...query },
+      {
+        $set: {
+          "category.label": categoryInfo.label,
+          "category.route": categoryInfo.route,
+        },
+      }
+    );
+
+    res.json({
+      success: true,
+      data: categoryInfo,
+      message: "Get Category group successfully"
+    });
+  } catch (error) {
+    console.log("error ===>>", error);
+    res.json({
       message: "Internal server error"
     });
   }

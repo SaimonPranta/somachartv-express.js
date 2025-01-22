@@ -32,7 +32,6 @@ const getNewsOrQueries = async (reqQuery = {}) => {
     fromDate,
     toDate
   } = reqQuery;
-  console.log("reqQuery ==>>", reqQuery);
   let query = {};
   const categoryGroupInfo = await CategoriesGroupCollection.findOne({
     groupName: categoryGroup
