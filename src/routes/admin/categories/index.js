@@ -122,7 +122,6 @@ router.post("/group", async (req, res) => {
       const categories = await new CategoriesGroupCollection({ ...data });
       updateCategories = await categories.save();
     }
-    console.log("updateCategories ===>>", updateCategories);
 
     res.json({
       success: true,
@@ -168,7 +167,6 @@ router.delete("/group", async (req, res) => {
 router.get("/group/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("id ==>>", id);
     const categoryInfo = await CategoriesGroupCollection.findOne({ _id: id });
     res.json({
       success: true,
@@ -236,7 +234,6 @@ router.post("/map", async (req, res) => {
       message: "Categories updated successfully"
     });
   } catch (error) {
-    console.log("error ==>>", error);
     res.json({
       message: "Internal server error"
     });
@@ -311,7 +308,6 @@ router.get("/map/sanitize/:id", async (req, res) => {
       message: "Get Category group successfully"
     });
   } catch (error) {
-    console.log("error ===>>", error);
     res.json({
       message: "Internal server error"
     });

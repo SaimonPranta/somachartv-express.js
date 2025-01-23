@@ -8,22 +8,8 @@ const getHotNews = require("./helper/functions/getHotNews");
 const CategoriesGroupCollection = require("../../../DB/Modals/categoryGroup");
 const { getNewsOrQueries } = require("../../../shared/utilize/getNewQueries");
 
-router.get("/sitemap", async (req, res) => {
-  try {
-    const news = await NewsCollection.find()
-      .sort({ createdAt: -1 })
-      .select("_id title category createdAt subcategory images updatedAt");
+router.use("/sitemap", require("./routes/sitemap/index"));
 
-    res.json({
-      success: true,
-      data: news
-    });
-  } catch (error) {
-    res.json({
-      message: "Internal server error"
-    });
-  }
-});
 router.post("/", async (req, res) => {
   try {
     const limit = Number(req.query.limit || 40);
@@ -170,4 +156,3 @@ router.get("/:id", async (req, res) => {
 });
 
 module.exports = router;
-
