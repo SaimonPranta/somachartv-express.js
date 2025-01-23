@@ -41,6 +41,7 @@ const notifyGoogleCrawlRequest = async (url, type = "URL_UPDATED") => {
     return;
   }
 
+  await notifyGoogleSitemapUpdate("sitemap-google-news.xml");
   await notifyGoogleSitemapUpdate("sitemap.xml");
   await notifyGoogleSitemapUpdate("image-sitemap.xml");
 

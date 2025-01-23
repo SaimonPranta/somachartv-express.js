@@ -1,11 +1,8 @@
 const router = require("express").Router();
-const CategoriesCollection = require("../../../DB/Modals/categories");
 const NewsCollection = require("../../../DB/Modals/news");
 const getDocument = require("../../../shared/utilize/getDocument");
-const { JSDOM } = require("jsdom");
 const { createImgFrame } = require("./helper/utilitize");
-const getHotNews = require("./helper/functions/getHotNews");
-const CategoriesGroupCollection = require("../../../DB/Modals/categoryGroup");
+const getHotNews = require("./helper/functions/getHotNews"); 
 const { getNewsOrQueries } = require("../../../shared/utilize/getNewQueries");
 
 router.use("/sitemap", require("./routes/sitemap/index"));
