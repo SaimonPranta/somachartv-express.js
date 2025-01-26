@@ -7,6 +7,7 @@ const isProduction = require("./shared/functions/isProduction");
 require("./DB/connections");
 require("./scrapers/index");
 require("./schedules/index");
+require("./watch/index");
 
 dotenv.config();
 
