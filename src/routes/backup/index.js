@@ -1,42 +1,26 @@
-const router = require("express").Router()
-const fs = require("fs")
-const path = require("path")
+const router = require("express").Router();
+const fs = require("fs");
+const path = require("path");
+const { storageRootPath } = require("../../shared/constants/variables");
+const createAllFilesAndFolders = require("../../shared/functions/createAllFilesAndFolders");
+const getAllFilesAndFolders = require("../../shared/functions/getAllFilesAndFolders");
 
-router.get("/", async (req, res) => {
-    try {
-       
-    } catch (error) {
-        console.log("Error")
-        res.json({
-            message: "Internal server error"
-        })
+router.get("/get-media-file", async (req, res) => {
+  try {
+    const fileList = await getAllFilesAndFolders(storageRootPath);
+    if (!fileList || !fileList.length) {
+      return res.json({
+        message: "No file or folder found"
+      });
     }
-})
-
-
-
-module.exports = router
-
-const rootDir = __dirname
-function getAllFilePaths(dir) {
-    let filePaths = [];
-  console.log("rootDir ==>", rootDir)
-    // Read the contents of the directory
-    fs.readdirSync(dir).forEach((file) => {
-      const fullPath = path.join(dir, file);
-  
-      // Check if the path is a directory
-      if (fs.statSync(fullPath).isDirectory()) {
-        // Recursively search subdirectories
-        filePaths = filePaths.concat(getAllFilePaths(fullPath));
-      } else {
-        // It's a file, add it to the list
-        const finalPath = fullPath.replace(path.join(rootDir), "");
-        filePaths.push(finalPath);
-      }
+    res.json({
+      data: fileList
     });
-  
-    return filePaths;
+  } catch (error) {
+    res.json({
+      message: "Internal server error"
+    });
   }
-
-  // console.log(getAllFilePaths("/"))
+});
+ 
+module.exports = router;

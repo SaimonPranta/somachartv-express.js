@@ -1,5 +1,5 @@
 const { readdirSync } = require("fs");
-const { join } = require("path");
+const { join, sep } = require("path");
 const {storageRootPath } = require("../constants/variables");
 
 
@@ -10,10 +10,12 @@ const getAllFilesAndFolders = (folderRootPath) => {
   for (const entry of entries) {
     const fullPath = join(folderRootPath, entry.name);
     const sanitizeFullPath = fullPath.replace(storageRootPath, "")
+    const updateSanitizeFullPath = sanitizeFullPath.split(sep).join('/');
+    const rootPath = updateSanitizeFullPath.replace(`/${entry.name}`, "")
     if (entry.isDirectory()) {
-      result.push({ name: entry.name, type: 'folder', fullPath: sanitizeFullPath, contents: getAllFilesAndFolders(fullPath) });
+      result.push({ name: entry.name, type: 'folder', fullPath: updateSanitizeFullPath, rootPath, contents: getAllFilesAndFolders(fullPath) });
     } else {
-      result.push({ name: entry.name, fullPath: sanitizeFullPath,  type: 'file' });
+      result.push({ name: entry.name, fullPath: updateSanitizeFullPath,rootPath,   type: 'file' });
     }
 
   }
